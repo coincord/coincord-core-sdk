@@ -1,0 +1,1 @@
+rsync -av --progress ../ ../../../coincord-core-wallet/node_modules/\@LegoBox/lego-crypto/  --exclude .git > /dev/null

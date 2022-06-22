@@ -1,0 +1,35 @@
+{
+  "name": "@coincord/coincord-core-sdk-wallet",
+  "version": "1.0.1-alpha.11",
+  "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
+  "main": "dist/lib/index.js",
+  "publishConfig": {
+    "@LegoBox:registry": "https://gitlab.com/api/v4/projects/20572019/packages/npm/"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "mozart",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.17.12",
+    "@types/jest": "^26.0.9",
+    "jest": "^26.2.2",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@types/node": "^14.0.27",
+    "dotenv": "^8.2.0"
+  },
+  "directories": {
+    "lib": "lib",
+    "dist": "dist",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:LegoBox/internal-modules/lego-crypto.git"
+  }
+}
