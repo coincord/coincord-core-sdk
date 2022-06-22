@@ -1,8 +1,9 @@
-# Lego Crypto
-> A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.
+# Coincord core wallet sdk 
+> Connecting to coincord core wallet.
 
-### Updates.
-**Version 1**
-- Currently only supporting Bitcoin via electrum wallet's rpc integrations.
-
+### Feature roadmap
+- [ ] Request to create addresses in particular token
+- [ ] Request to get app data and token data
+- [ ] Request to get transactions and events
+ 
 ### Installation
