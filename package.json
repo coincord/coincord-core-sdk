@@ -38,6 +38,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:LegoBox/internal-modules/lego-crypto.git"
+    "url": "git@github.com:coincord/coincord-core-wallet-sdk.git"
   }
 }
