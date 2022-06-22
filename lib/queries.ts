@@ -1,0 +1,189 @@
+import { gql } from "graphql-request"
+
+// list queries
+export const app = gql`
+    query APP{
+        app{
+            id
+            name
+            client_id
+            client_secret
+            api_key
+            webhook_url
+            app_wallet {
+                id
+                token_name
+                token_set
+                balance
+                addresses {
+                    id
+                    address
+                }
+            }
+        }
+    }
+`
+export const apps = gql`
+    query APPS{
+        apps{
+            id
+            name
+            client_id
+            client_secret
+            api_key
+            webhook_url
+            app_wallet {
+            id
+            token_name
+            token_set
+            balance
+            addresses {
+                id
+                address
+            }
+            }
+        }
+    }
+`
+export const addresses = gql`
+    query Addresses{
+        addresses {
+            id
+            address
+            amount
+            created_at
+            token_set
+            app {
+                id
+                name
+            }
+            token {
+                name
+                ticker
+                token_set
+                contract_address
+            }
+            transactions {
+                id
+                address_id
+                created_at
+                tx_hash
+                amount
+                address {
+                    address
+                }
+            }
+        }
+    }
+`
+export const tokens = gql`
+    query Tokens{
+        tokens {
+            id
+            name
+            token_set
+            ticker
+            contract_address
+            app_wallet {
+                id
+                app {
+                    id
+                }
+            }
+            addresses {
+                id
+                address
+            }
+        }
+    }
+`
+export const events = gql`
+    query Events{
+        events {
+            id
+            sender_address
+            address_id
+            event
+            token_set
+            token {
+                id
+                name
+                token_set
+            }
+            details
+            amount
+        }
+    }
+`
+export const transactions = gql``
+
+// mutations
+export const createAddress = gql`
+    mutation CREATE_NEW_ADDRESS ($token_set:TokenCollection!) {
+        address__createAddress(
+            token_set:$token_set
+        ){
+            id
+            address
+            created_at
+            token_set
+            token {
+                name
+            }
+        }
+    }
+`
+export const sendTokens = gql`
+    mutation SendTokens (
+        $recipient: String!,
+        $sender: String,
+        $amount: Float!,
+        $token: TokenCollection!
+    ){
+        address__sendTokens(
+            recipient: $recipient,
+            sender: $sender, 
+            amount: $amount, 
+            token: $token
+        ) {
+            id
+            recipient
+            address_id
+            created_at
+            tx_hash
+            type
+            amount
+            status
+            address {
+                id
+                address
+                token_set
+                token {
+                    id
+                    name
+                }
+            }
+            token {
+                token_set
+                name
+                id
+            }
+        }
+    }
+`
+export const updateAppDetails = gql``
+export const generateClientSecret = gql``
+export const generateAppWallet = gql`
+    mutation GenerateAppWallet ($token_id:String!) {
+        app_generateAppWallet(
+            token_id: $token_id
+        ){
+            id
+            app_id
+            token_name
+            token_id
+            created_at
+            balance
+        }
+    }
+`
