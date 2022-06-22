@@ -23,6 +23,15 @@ export const app = gql`
         }
     }
 `
+
+export const feeRate = gql`
+    query FEERATE {
+        fee_rate {
+            bitcoin_fee_rate
+            litecoin_fee_rate
+        }
+    }
+`
 export const apps = gql`
     query APPS{
         apps{
