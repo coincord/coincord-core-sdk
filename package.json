@@ -4,7 +4,7 @@
   "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
   "main": "dist/lib/index.js",
   "publishConfig": {
-    "@LegoBox:registry": "https://gitlab.com/api/v4/projects/20572019/packages/npm/"
+    "@coincord:registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "build": "tsc"
