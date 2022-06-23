@@ -1,7 +1,7 @@
 require('dotenv').config()
 import { GraphQLClient } from "graphql-request"
 import graphqlClient from "./requester"
-import { createAddress, sendTokens, app, feeRate, addresses } from "./queries"
+import { createAddress, sendTokens, app, feeRate, addresses, events } from "./queries"
 
 export type TokenCollectionType = "BITCOIN" | "LITECOIN" | "ETHEREUM" | "DAI" | "USDC" | "DAI" | "USDT"
 
@@ -66,6 +66,19 @@ export default class CoincordCoreWallet {
         try {
             address = await graphqlClient.request(addresses)
             return address.addresses
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getEvents(token: TokenCollectionType, address: string | null) {
+        let eventsData;
+        try {
+            eventsData = await graphqlClient.request(events, {
+                token: token,
+                address: address
+            })
+            return eventsData.events
         } catch (error) {
             throw error
         }

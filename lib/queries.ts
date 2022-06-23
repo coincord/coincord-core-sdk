@@ -107,17 +107,32 @@ export const tokens = gql`
     }
 `
 export const events = gql`
-    query Events{
-        events {
+    query Events ($token:String, $address:String) {
+        events (
+            address: $address,
+            token:$token
+        ){
             id
             sender_address
-            address_id
+            address {
+                address
+            }
             event
             token_set
             token {
                 id
                 name
                 token_set
+            }
+            transaction {
+                id
+                address_id
+                recipient
+                tx_hash
+                type
+                amount
+                status
+                address
             }
             details
             amount
