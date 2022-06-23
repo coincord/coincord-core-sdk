@@ -119,6 +119,7 @@ export const events = gql`
             }
             event
             token_set
+            token_name
             token {
                 id
                 name
