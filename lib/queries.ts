@@ -132,7 +132,10 @@ export const events = gql`
                 type
                 amount
                 status
-                address
+                address {
+                  address
+                  id
+                }
             }
             details
             amount
