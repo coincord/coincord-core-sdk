@@ -52,6 +52,13 @@ export default class CoincordCoreWallet {
                     // console.log(address)
                     return address.address__createAddress
                     break;
+                case "ETHEREUM":
+                    address = await graphqlClient.request(createAddress, {
+                        token_set: "ETHEREUM"
+                    })
+                    // console.log(address)
+                    return address.address__createAddress
+                    break;
                 default:
                     throw new Error("Address not found")
                     break;
