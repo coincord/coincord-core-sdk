@@ -1,6 +1,6 @@
 {
   "name": "@coincord/coincord-core-sdk-wallet",
-  "version": "0.1.1-alpha-1.6",
+  "version": "0.1.1-alpha-1.7",
   "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
   "main": "dist/lib/index.js",
   "publishConfig": {
