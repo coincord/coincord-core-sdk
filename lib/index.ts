@@ -76,7 +76,7 @@ export default class CoincordCoreWallet {
                 value: value,
                 recipient: recipient
             })
-            return estimateObject
+            return estimateObject.address__getEstimate
         } catch (error) {
             throw error
         }
