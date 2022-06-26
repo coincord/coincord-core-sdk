@@ -201,6 +201,15 @@ export const sendTokens = gql`
 `
 export const updateAppDetails = gql``
 export const generateClientSecret = gql``
+export const getEstimateQuery = gql`
+    mutation FEE_ESTIMATE ($token:TokenCollection!, $value:Float!, $recipient:String!) {
+        address__getEstimate(token: $token, value: $value, recipient: $recipient){
+            value
+            token
+            recipient
+        }
+    }
+`
 export const generateAppWallet = gql`
     mutation GenerateAppWallet ($token_id:String!) {
         app_generateAppWallet(

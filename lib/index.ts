@@ -1,7 +1,7 @@
 require('dotenv').config()
 import { GraphQLClient } from "graphql-request"
 import graphqlClient from "./requester"
-import { createAddress, sendTokens, app, feeRate, addresses, events } from "./queries"
+import { createAddress, sendTokens, app, feeRate, addresses, events, getEstimateQuery } from "./queries"
 
 export type TokenCollectionType = "BITCOIN" | "LITECOIN" | "ETHEREUM" | "DAI" | "USDC" | "DAI" | "USDT"
 
@@ -63,6 +63,20 @@ export default class CoincordCoreWallet {
                     throw new Error("Address not found")
                     break;
             }
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getFeeEstimate(token: TokenCollectionType, value: number, recipient: string) {
+        let estimateObject;
+        try {
+            estimateObject = await graphqlClient.request(getEstimateQuery, {
+                token: token,
+                value: value,
+                recipient: recipient
+            })
+            return estimateObject
         } catch (error) {
             throw error
         }
