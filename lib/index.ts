@@ -107,6 +107,7 @@ export default class CoincordCoreWallet {
 
     async sendTokens(request: {
         recipient: string,
+        fee_rate: number,
         sender: string | null,
         amount: number,
         token: TokenCollectionType
