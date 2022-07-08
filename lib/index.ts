@@ -37,32 +37,11 @@ export default class CoincordCoreWallet {
     async createAddress(token: TokenCollectionType) {
         let address;
         try {
-            switch (token) {
-                case "BITCOIN":
-                    address = await graphqlClient.request(createAddress, {
-                        token_set: "BITCOIN"
+            address = await graphqlClient.request(createAddress, {
+                        token_set: token
                     })
                     // console.log(address)
-                    return address.address__createAddress
-                    break;
-                case "LITECOIN":
-                    address = await graphqlClient.request(createAddress, {
-                        token_set: "LITECOIN"
-                    })
-                    // console.log(address)
-                    return address.address__createAddress
-                    break;
-                case "ETHEREUM":
-                    address = await graphqlClient.request(createAddress, {
-                        token_set: "ETHEREUM"
-                    })
-                    // console.log(address)
-                    return address.address__createAddress
-                    break;
-                default:
-                    throw new Error("Address not found")
-                    break;
-            }
+            return address.address__createAddress
         } catch (error) {
             throw error
         }
