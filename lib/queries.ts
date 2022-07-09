@@ -166,7 +166,7 @@ export const sendTokens = gql`
         $recipient: String!,
         $sender: String,
         $amount: Float!,
-        $fee_rate: Float,
+        $fee_rate: Float!,
         $token: TokenCollection!
     ){
         address__sendTokens(
