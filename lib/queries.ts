@@ -172,7 +172,8 @@ export const sendTokens = gql`
         address__sendTokens(
             recipient: $recipient,
             sender: $sender, 
-            amount: $amount, 
+            amount: $amount,
+            fee_rate: $fee_rate,
             token: $token
         ) {
             id
