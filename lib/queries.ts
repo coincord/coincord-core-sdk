@@ -165,6 +165,7 @@ export const sendTokens = gql`
     mutation SendTokens (
         $recipient: String!,
         $sender: String,
+        $reference: String,
         $amount: Float!,
         $fee_rate: Float!,
         $token: TokenCollection!
@@ -173,6 +174,7 @@ export const sendTokens = gql`
             recipient: $recipient,
             sender: $sender, 
             amount: $amount,
+            reference: $reference,
             fee_rate: $fee_rate,
             token: $token
         ) {
