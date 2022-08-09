@@ -88,6 +88,7 @@ export default class CoincordCoreWallet {
         recipient: string,
         fee_rate: number,
         sender: string | null,
+        reference: string | null,
         amount: number,
         token: TokenCollectionType
     }) {
