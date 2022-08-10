@@ -119,6 +119,7 @@ export const events = gql`
             }
             event
             token_set
+            reference
             token_name
             token {
                 id
@@ -129,6 +130,7 @@ export const events = gql`
                 id
                 address_id
                 recipient
+                reference
                 tx_hash
                 type
                 amount
