@@ -161,10 +161,8 @@ export const createAddress = gql`
 
 export const createAddressCollection = gql`
   mutation CREATE_ADDRESS_COLLECTION($uniqueId: String!) {
-    address__createAddressWithUniqueId({
-      uniqueId: $uniqueId
-    }){
-      BITCOIN {
+    address__createAddressWithUniqueId(uniqueId: $uniqueId) {
+      LITECOIN {
         id
         address
         created_at
