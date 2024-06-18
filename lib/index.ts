@@ -71,9 +71,14 @@ export default class CoincordCoreWallet {
 
   async createAddressCollection(uniqueId: string) {
     try {
-      return await graphqlClient.request(createAddressCollection, {
-        uniqueId: uniqueId,
-      });
+      let addressCollection = await graphqlClient.request(
+        createAddressCollection,
+        {
+          uniqueId: uniqueId,
+        }
+      );
+
+      return addressCollection.address__createAddressWithUniqueId;
       // console.log(address)
     } catch (error) {
       throw error;
