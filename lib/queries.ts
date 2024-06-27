@@ -88,21 +88,10 @@ export const addresses = gql`
 export const tokens = gql`
   query Tokens {
     tokens {
-      id
       name
       token_set
       ticker
       contract_address
-      app_wallet {
-        id
-        app {
-          id
-        }
-      }
-      addresses {
-        id
-        address
-      }
     }
   }
 `;
