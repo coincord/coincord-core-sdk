@@ -25,9 +25,10 @@ yarn install @coincord/coincord-core-wallet-sdk
 The Coincord Core Wallet SDK requires three environment variables for authentication and interaction with the network:
 
 COINCORD_CORE_HOST_URL: The base URL of your Coincord Core node
+
 COINCORD_CORE_HOST_CLIENT_ID: Your unique Coincord client ID obtained from Coincord support.
+
 COINCORD_CORE_HOST_CLIENT_SECRET: Your Coincord client secret associated with your client ID.
-Obtaining Credentials:
 
 Contact Coincord support at support@coincord.co to request your client ID and client secret.
 
