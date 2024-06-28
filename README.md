@@ -50,16 +50,18 @@ Core Functionalities
 The Coincord Core Wallet SDK provides a rich set of functionalities:
 
 Initialization: Create a CoreWalletSDK instance to access SDK methods.
-Get App: Retrieve information about your Coincord application instance (name, associated wallet).
+- **Get App**: Retrieve information about your Coincord application instance (name, associated wallet).
 
-Create Addresses: Generate new addresses for various supported tokens (Bitcoin, Litecoin, Ethereum, etc.).
+- **Create Addresses**: Generate new addresses for various supported tokens (Bitcoin, Litecoin, Ethereum, etc.).
 
-Create Address Collection: Create collections of addresses with unique identifiers.
+- **Create Address Collection**: Create collections of addresses with unique identifiers.
 
-Get Fee Estimate: Retrieve estimated network fees for sending tokens.
-Get Events: Get a list of transactions (events) associated with a specific token and address.
+- **Get Fee Estimate**: Retrieve estimated network fees for sending tokens.
+- **Get Events**: Get a list of transactions (events) associated with a specific token and address.
 
-Send Tokens: Transfer tokens from one address to another.
+- **SendTokensCheck**: Check the cost of sending a token transaction before confirming it
+
+- **Process Transaction**: Process a send tokens check
 
 *Important Note: Refer to the official Coincord Core documentation for a comprehensive list of functionalities and detailed information on each function.*
 
@@ -109,19 +111,32 @@ let address = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
 let events = await coincordCoreClient.getEvents(token, address);
 ```
 
-### Send Tokens
-Send tokens from a sender to a recipient.
+### Send Tokens Check
+Check the cost of sending a transaction
 ```ts
-let response = await coincordCoreClient.sendTokens({
+let response = await coincordCoreClient.sendTokenCheck({
   recipient: "recipient_address",
-  fee_rate: 0.001,
   sender: "sender_address",
   reference: "optional_reference",
   amount: 100,
-  network: "BITCOIN",
-  token: "BTC",
+  network: "POLYGON",
+  token: "USDC",
 });
 
 // Response contains the transaction address or throws an error
-let transactionAddress = response.address__sendTokens;
+let transactionAddress = response.hash_ref;
 ```
+
+### Confirming a transaction
+Check the cost of sending a transaction
+```ts
+let response = await coincordCoreClient.processTransaction({
+  hash_ref: hash_ref
+});
+
+// Response contains the transaction address or throws an error
+let transactionHash = response.tx_hash;
+```
+
+## Webhooks and Events
+Coincord core APIs provide access to webhook events for getting notified on transaction status for incoming and completed transactions

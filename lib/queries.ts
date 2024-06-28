@@ -6,8 +6,6 @@ export const app = gql`
     app {
       id
       name
-      client_id
-      client_secret
       api_key
       webhook_url
       app_wallet {
@@ -32,28 +30,7 @@ export const feeRate = gql`
     }
   }
 `;
-export const apps = gql`
-  query APPS {
-    apps {
-      id
-      name
-      client_id
-      client_secret
-      api_key
-      webhook_url
-      app_wallet {
-        id
-        token_name
-        token_set
-        balance
-        addresses {
-          id
-          address
-        }
-      }
-    }
-  }
-`;
+
 export const addresses = gql`
   query Addresses {
     addresses {
@@ -85,6 +62,7 @@ export const addresses = gql`
     }
   }
 `;
+
 export const tokens = gql`
   query Tokens {
     tokens {
@@ -95,6 +73,7 @@ export const tokens = gql`
     }
   }
 `;
+
 export const events = gql`
   query Events($token: String, $address: String) {
     events(address: $address, token: $token) {
@@ -175,52 +154,46 @@ export const createAddressCollection = gql`
   }
 `;
 
-export const sendTokens = gql`
-  mutation SendTokens(
+export const sendTokenCheck = gql`
+  mutation sendTokenCheck(
     $recipient: String!
     $sender: String
     $reference: String
     $amount: Float!
-    $fee_rate: Float!
     $token: TokenCollection!
     $network: NetworkCollection
   ) {
-    address__sendTokens(
+    address__sendTokenCheck(
       recipient: $recipient
       sender: $sender
       amount: $amount
       reference: $reference
-      fee_rate: $fee_rate
       token: $token
       network: $network
     ) {
       id
       recipient
-      address_id
-      created_at
-      tx_hash
+      hash_ref
       type
       amount
-      status
-      address {
-        id
-        address
-        token_set
-        token {
-          id
-          name
-        }
-      }
-      token {
-        token_set
-        name
-        id
-      }
+      created_at
     }
   }
 `;
-export const updateAppDetails = gql``;
-export const generateClientSecret = gql``;
+
+export const processTransaction = gql`
+  mutation processTransaction($hash_ref: String!) {
+    address__processTransaction(hash_ref: $hash_ref) {
+      id
+      tx_hash
+      reference
+      hash
+      amount
+      status
+    }
+  }
+`;
+
 export const getEstimateQuery = gql`
   mutation FEE_ESTIMATE(
     $token: TokenCollection!
@@ -237,18 +210,6 @@ export const getEstimateQuery = gql`
       value
       token
       recipient
-    }
-  }
-`;
-export const generateAppWallet = gql`
-  mutation GenerateAppWallet($token_id: String!) {
-    app_generateAppWallet(token_id: $token_id) {
-      id
-      app_id
-      token_name
-      token_id
-      created_at
-      balance
     }
   }
 `;

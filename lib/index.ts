@@ -3,7 +3,8 @@ import { GraphQLClient } from "graphql-request";
 import graphqlClient from "./requester";
 import {
   createAddress,
-  sendTokens,
+  sendTokenCheck,
+  processTransaction,
   app,
   feeRate,
   addresses,
@@ -128,9 +129,8 @@ export default class CoincordCoreWallet {
     }
   }
 
-  async sendTokens(request: {
+  async sendTokenCheck(request: {
     recipient: string;
-    fee_rate: number;
     sender: string | null;
     reference: string | null;
     amount: number;
@@ -138,10 +138,22 @@ export default class CoincordCoreWallet {
     token: TokenCollectionType;
   }) {
     try {
-      let response = await graphqlClient.request(sendTokens, {
+      let response = await graphqlClient.request(sendTokenCheck, {
         ...request,
       });
-      return response.address__sendTokens;
+      return response.address__sendTokenCheck;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async processTransaction(request: { hash_ref: string }) {
+    try {
+      let response = await graphqlClient.request(processTransaction, {
+        ...request,
+      });
+      return response.address__processTransaction;
     } catch (error) {
       console.log(error);
       throw error;
