@@ -12,11 +12,13 @@ yarn (optional package manager): https://yarnpkg.com/
 
 ### Package Installation:
 ```sh
-# yarn
-yarn install @coincord/coincord-core-wallet-sdk
-
 # npm
 npm install @coincord/coincord-core-wallet-sdk
+```
+or
+```sh
+# yarn
+yarn install @coincord/coincord-core-wallet-sdk
 ```
 
 ### Setup your environment variables.
