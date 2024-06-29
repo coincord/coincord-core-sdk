@@ -11,6 +11,13 @@ npm (included with Node.js installation)
 yarn (optional package manager): https://yarnpkg.com/
 
 ### Package Installation:
+
+> Coincord Libraries are hosted on github not npm so add this to your .npmrc file, (vim ~/.npmrc)
+```sh
+@coincord:registry=https://npm.pkg.github.com
+```
+With this set your environment will know to check github for coincord libraries instead of npm
+
 ```sh
 # npm
 npm install @coincord/coincord-core-wallet-sdk
