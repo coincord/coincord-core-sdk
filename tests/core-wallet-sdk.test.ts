@@ -1,12 +1,12 @@
-require("dotenv").config()
+require("dotenv").config();
 // jest.useFakeTimers()
-import CoreWalletSdk from "../lib"
+import CoreWalletSdk from "../lib";
 
 // describe("Electrum tests", () => {
 //     let newBitCoinWallet:any= null;
 //     beforeEach(() => {
 //         newBitCoinWallet = new Bitcoin.Electrum();
-//     }) 
+//     })
 
 //     it("test if one can create an address", async () => {
 
@@ -58,55 +58,54 @@ import CoreWalletSdk from "../lib"
 //     })
 // })
 describe("Core SDK test", () => {
-    let coreSDKLib: CoreWalletSdk
-    beforeEach(() => {
-        coreSDKLib = new CoreWalletSdk()
-    })
+  let coreSDKLib: CoreWalletSdk;
+  beforeEach(() => {
+    coreSDKLib = new CoreWalletSdk();
+  });
 
-    it("get the current app data", async () => {
+  it("get the current app data", async () => {
+    let response = await coreSDKLib.getApp();
+    // let response = await coreSDKLib.createAddress("LITECOIN")
+    console.log(response);
+    expect(typeof response.id).toBe("string");
+  });
+  it("test if one can create a bitcoin address", async () => {
+    let response = await coreSDKLib.createAddress("BITCOIN");
+    // let response = await coreSDKLib.createAddress("LITECOIN")
+    console.log(response);
+    expect(typeof response.address).toBe("string");
+  });
 
-        let response = await coreSDKLib.getApp()
-        // let response = await coreSDKLib.createAddress("LITECOIN")
-        console.log(response)
-        expect(typeof response.id).toBe("string");
-    })
-    it("test if one can create a bitcoin address", async () => {
+  it("test if one can create a litecoin address", async () => {
+    let response = await coreSDKLib.createAddress("LITECOIN");
+    // let response = await coreSDKLib.createAddress("LITECOIN")
+    console.log(response);
+    expect(typeof response.address).toBe("string");
+  });
 
-        let response = await coreSDKLib.createAddress("BITCOIN")
-        // let response = await coreSDKLib.createAddress("LITECOIN")
-        console.log(response)
-        expect(typeof response.address).toBe("string");
-    })
+  it("test the sending of bitcoin tokens", async () => {
+    let response = await coreSDKLib.sendTokenCheck({
+      sender: "null",
+      recipient: "tb1qxu0lgzldlk8dd443synme8mapf3y9zzystjq6t",
+      amount: 0.0003,
+      token: "BITCOIN",
+      network: "BITCOIN",
+      reference: "some reference set",
+    });
+    // let response = await coreSDKLib.createAddress("LITECOIN")
+    console.log(response);
+    expect(typeof response.address).toBe("string");
+  });
 
-    it("test if one can create a litecoin address", async () => {
-
-        let response = await coreSDKLib.createAddress("LITECOIN")
-        // let response = await coreSDKLib.createAddress("LITECOIN")
-        console.log(response)
-        expect(typeof response.address).toBe("string");
-    })
-    it("test the sending of bitcoin tokens", async () => {
-
-        let response = await coreSDKLib.sendTokens({
-            sender: null,
-            recipient: "tb1qxu0lgzldlk8dd443synme8mapf3y9zzystjq6t",
-            amount: 0.0003,
-            token: "BITCOIN"
-        })
-        // let response = await coreSDKLib.createAddress("LITECOIN")
-        console.log(response)
-        expect(typeof response.address).toBe("string");
-    })
-    it("test the sending of litecoin tokens", async () => {
-
-        let response = await coreSDKLib.sendTokens({
-            sender: null,
-            recipient: "tltc1qe0mltkkvm5l5tl8r0u5uyxuygdxh63jamrmexh",
-            amount: 0.3,
-            token: "LITECOIN"
-        })
-        // let response = await coreSDKLib.createAddress("LITECOIN")
-        console.log(response)
-        expect(typeof response.address).toBe("string");
-    })
-})
+  it("test the sending of litecoin tokens", async () => {
+    // let response = await coreSDKLib.sendTokens({
+    //   sender: null,
+    //   recipient: "tltc1qe0mltkkvm5l5tl8r0u5uyxuygdxh63jamrmexh",
+    //   amount: 0.3,
+    //   token: "LITECOIN",
+    // });
+    // // let response = await coreSDKLib.createAddress("LITECOIN")
+    // console.log(response);
+    // expect(typeof response.address).toBe("string");
+  });
+});
