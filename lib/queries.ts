@@ -115,7 +115,7 @@ export const transactions = gql``;
 // mutations
 export const createAddress = gql`
   mutation CREATE_NEW_ADDRESS($token_set: TokenCollection!) {
-    address__createAddress(token_set: $token_set) {
+    _createAddress(token_set: $token_set) {
       id
       address
       created_at
@@ -129,7 +129,7 @@ export const createAddress = gql`
 
 export const createAddressCollection = gql`
   mutation CREATE_ADDRESS_COLLECTION($uniqueId: String!) {
-    address__createAddressWithUniqueId(uniqueId: $uniqueId) {
+    _createAddressCollection(uniqueId: $uniqueId) {
       LITECOIN {
         id
         address
@@ -163,7 +163,7 @@ export const sendTokenCheck = gql`
     $token: TokenCollection!
     $network: NetworkCollection
   ) {
-    address__sendTokenCheck(
+    _sendTokenCheck(
       recipient: $recipient
       sender: $sender
       amount: $amount
@@ -181,9 +181,43 @@ export const sendTokenCheck = gql`
   }
 `;
 
+export const sendTokens = gql`
+  mutation _sendTokens(
+    $recipient: String!
+    $sender: String
+    $reference: String
+    $amount: Float!
+    $fee_rate: Float!
+    $token: TokenCollection!
+    $network: NetworkCollection
+  ) {
+    address__sendTokens(
+      recipient: $recipient
+      sender: $sender
+      amount: $amount
+      fee_rate: $fee_rate
+      reference: $reference
+      token: $token
+      network: $network
+    ) {
+      id
+      tx_hash
+      reference
+      recipient
+      hash
+      amount
+      status
+      token {
+        token_set
+        name
+      }
+    }
+  }
+`;
+
 export const processTransaction = gql`
   mutation processTransaction($hash_ref: String!) {
-    address__processTransaction(hash_ref: $hash_ref) {
+    _processTransaction(hash_ref: $hash_ref) {
       id
       tx_hash
       reference
@@ -201,7 +235,7 @@ export const getEstimateQuery = gql`
     $network: NetworkCollection!
     $recipient: String!
   ) {
-    address__getEstimate(
+    _getEstimate(
       token: $token
       value: $value
       network: $network
@@ -210,6 +244,34 @@ export const getEstimateQuery = gql`
       value
       token
       recipient
+    }
+  }
+`;
+
+export const generateClientSecret = gql`
+  mutation GENERATE_CLIENT_SECRET() {
+    app_generateClientSecret() {
+      client_id
+      client_secret
+    }
+  }
+`;
+
+export const updateAppDetails = gql`
+  mutation UPDATE_APP_DETAILS(
+    $name: String
+    $api_key: String
+    $webhook_url: String
+  ) {
+    app_updateAppDetails(
+      name: $name
+      api_key: $api_key
+      webhook_url: $webhook_url
+    ) {
+      id
+      name
+      api_key
+      webhook_url
     }
   }
 `;

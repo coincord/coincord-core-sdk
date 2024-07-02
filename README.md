@@ -145,5 +145,55 @@ let response = await coincordCoreClient.processTransaction({
 let transactionHash = response.tx_hash;
 ```
 
+## Managing your app
+-----
+There are two major calls available in this version to manage your app.
+### Update App details.
+Update your app details within core for critical api integrations.
+```ts
+let response = await coincordCoreClient.updateAppDetails({
+  name: "Your App Name",
+  api_key: "YOUR API KEY",
+  webhook_url: "YOUR_WEBHOOK_URL"
+})
+```
+### Generate client secret.
+Generate new client id and secrets for your account. This is nessecary for situations like rotational auth migrations.
+```ts
+let response = await coincordCoreClient.generateClientSecret()
+
+// YOUR UPDATED CLIENT DETAILS
+console.log(response.client_id)
+console.log(response.client_secret)
+```
+
 ## Webhooks and Events
 Coincord core APIs provide access to webhook events for getting notified on transaction status for incoming and completed transactions
+
+Coincord sends Webhook events with the structure
+
+```ts
+
+type RequestBody = {
+  event: EventRequest
+}
+
+type EventRequest = {
+  address: string;
+  transaction: {
+    id: string | null;
+    tx_hash: string | null;
+    recipient: string | null;
+  };
+  event: "INCOMING_TRANSACTION" | "OUTGOING_TRANSACTION" | "MINED_TRANSACTION"; 
+  token_set: string;
+  amount: number;
+  network: "BITCOIN" | "LITECOIN" | "POLYGON" | "TRON" | "ETHEREUM"
+  reference: string | null;
+  details: string;
+  token_name: string;
+  created_at: Date;
+};
+```
+
+The request header contains the API_KEY, confirm the API key on your end to confirm for certain that the webhook request is coming from the right source.

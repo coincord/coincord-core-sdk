@@ -11,6 +11,9 @@ import {
   events,
   getEstimateQuery,
   createAddressCollection,
+  sendTokens,
+  updateAppDetails,
+  generateClientSecret,
 } from "./queries";
 
 export type TokenCollectionType =
@@ -64,7 +67,7 @@ export default class CoincordCoreWallet {
         token_set: token,
       });
       // console.log(address)
-      return address.address__createAddress;
+      return address._createAddress;
     } catch (error) {
       throw error;
     }
@@ -79,7 +82,7 @@ export default class CoincordCoreWallet {
         }
       );
 
-      return addressCollection.address__createAddressWithUniqueId;
+      return addressCollection._createAddressCollection;
       // console.log(address)
     } catch (error) {
       throw error;
@@ -100,7 +103,7 @@ export default class CoincordCoreWallet {
         network: network,
         recipient: recipient,
       });
-      return estimateObject.address__getEstimate;
+      return estimateObject._getEstimate;
     } catch (error) {
       throw error;
     }
@@ -141,7 +144,27 @@ export default class CoincordCoreWallet {
       let response = await graphqlClient.request(sendTokenCheck, {
         ...request,
       });
-      return response.address__sendTokenCheck;
+      return response._sendTokenCheck;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async sendTokens(request: {
+    recipient: string;
+    sender: string | null;
+    reference: string | null;
+    amount: number;
+    fee_rate: number;
+    network: NetworkCollection;
+    token: TokenCollectionType;
+  }) {
+    try {
+      let response = await graphqlClient.request(sendTokens, {
+        ...request,
+      });
+      return response._sendTokens;
     } catch (error) {
       console.log(error);
       throw error;
@@ -153,7 +176,34 @@ export default class CoincordCoreWallet {
       let response = await graphqlClient.request(processTransaction, {
         ...request,
       });
-      return response.address__processTransaction;
+      return response._processTransaction;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // App related Calls
+  async updateAppDetails(request: {
+    name: string | undefined;
+    api_key: string | undefined;
+    webhook_url: string | undefined;
+  }) {
+    try {
+      let response = await graphqlClient.request(updateAppDetails, {
+        ...request,
+      });
+      return response.app_updateAppDetails;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async generateClientSecret() {
+    try {
+      let response = await graphqlClient.request(generateClientSecret, {});
+      return response.app_generateClientSecret;
     } catch (error) {
       console.log(error);
       throw error;
