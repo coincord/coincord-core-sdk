@@ -1,6 +1,6 @@
-# Coincord core wallet sdk 
-The Coincord Core Wallet SDK empowers developers to seamlessly interact with the Coincord Core wallet programmatically. It offers a comprehensive 
-suite of functionalities for managing addresses, sending and receiving tokens, monitoring events, and more, streamlining integration of Coincord Core features into your applications.
+# Coincord core sdk 
+The Coincord Core SDK empowers developers to seamlessly interact with the Coincord Core wallet programmatically. It offers a comprehensive 
+suite of functionalities for managing addresses, sending and receiving tokens, monitoring events, and more, streamlining the integration of Coincord Core features into your applications.
  
 ### Installation
 Prerequisites:
