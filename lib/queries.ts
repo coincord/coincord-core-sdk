@@ -6,7 +6,6 @@ export const app = gql`
     app {
       id
       name
-      api_key
       webhook_url
       app_wallet {
         id
@@ -46,8 +45,6 @@ export const addresses = gql`
       token {
         name
         ticker
-        token_set
-        contract_address
       }
       transactions {
         id
@@ -157,15 +154,13 @@ export const createAddressCollection = gql`
 export const sendTokenCheck = gql`
   mutation sendTokenCheck(
     $recipient: String!
-    $sender: String
     $reference: String
     $amount: Float!
     $token: TokenCollection!
-    $network: NetworkCollection
+    $network: Network
   ) {
     _sendTokenCheck(
       recipient: $recipient
-      sender: $sender
       amount: $amount
       reference: $reference
       token: $token
@@ -174,9 +169,7 @@ export const sendTokenCheck = gql`
       id
       recipient
       hash_ref
-      type
       amount
-      created_at
     }
   }
 `;
@@ -232,7 +225,7 @@ export const getEstimateQuery = gql`
   mutation FEE_ESTIMATE(
     $token: TokenCollection!
     $value: Float!
-    $network: NetworkCollection!
+    $network: Network!
     $recipient: String!
   ) {
     _getEstimate(
@@ -249,8 +242,8 @@ export const getEstimateQuery = gql`
 `;
 
 export const generateClientSecret = gql`
-  mutation GENERATE_CLIENT_SECRET() {
-    app_generateClientSecret() {
+  mutation GENERATE_CLIENT_SECRET {
+    app_generateClientSecret {
       client_id
       client_secret
     }
@@ -270,7 +263,6 @@ export const updateAppDetails = gql`
     ) {
       id
       name
-      api_key
       webhook_url
     }
   }
