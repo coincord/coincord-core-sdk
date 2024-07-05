@@ -134,7 +134,6 @@ export default class CoincordCoreWallet {
 
   async sendTokenCheck(request: {
     recipient: string;
-    sender: string | null;
     reference: string | null;
     amount: number;
     network: NetworkCollection;
