@@ -1,3 +1,8 @@
+// This software and its associated documentation are the exclusive property of Coincord.
+// It is provided to authorized Coincord partners and clients under the terms of the Coincord Software License.
+// Unauthorized use, copying, distribution, or modification of this software is strictly prohibited.
+// © Coincord 2024. All rights reserved.
+
 import { gql } from "graphql-request";
 
 // list queries
