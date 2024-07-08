@@ -219,13 +219,12 @@ enum TokenSet {
 }
 
 enum Network {
-  BASE
   BITCOIN
   ETHEREUM
   LITECOIN
   POLYGON
-  SOLANA
-  TRON
+  // SOLANA
+  // TRON
 }
 
 
