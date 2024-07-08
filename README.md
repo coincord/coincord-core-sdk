@@ -197,3 +197,209 @@ type EventRequest = {
 ```
 
 The request header contains the API_KEY, confirm the API key on your end to confirm for certain that the webhook request is coming from the right source.
+
+## Coincord Core Types.
+This section outlines the types of the response data you would receive on every request made to our apis. Since the APIs are graphql based, the responses are equally graphql based.
+
+```ts
+
+type Address {
+  address: String!
+  amount: Float!
+  app: App!
+  app_wallet: AppWallet
+  app_wallet_id: String
+  created_at: String!
+  events: [Event]
+  id: String!
+  token: Token
+  token_set: TokenSet!
+  transactions: [Transaction]
+}
+
+type AddressSet {
+  BITCOIN: Address!
+  ETHEREUM: Address!
+  LITECOIN: Address!
+  MULTI_ERC: Address!
+}
+
+type App {
+  addresses: [Address]!
+  app_wallet: [AppWallet]!
+  created_at: String!
+  id: String!
+  name: String!
+  webhook_url: String
+}
+
+type AppWallet {
+  addresses: [Address]!
+  app: App!
+  app_id: String!
+  balance: Float!
+  created_at: String!
+  id: String!
+  token_name: String!
+  token_set: String!
+  transactions: [Transaction]!
+}
+
+type Event {
+  address: Address
+  address_id: String
+  amount: Float!
+  app: App!
+  app_id: String!
+  app_wallet: AppWallet
+  app_wallet_id: String
+  created_at: String
+  details: String
+  event: String!
+  id: String!
+  network: String
+  reference: String
+  sender_address: String
+  token: Token!
+  token_id: String!
+  token_name: String!
+  token_set: String!
+  transaction: Transaction
+  transaction_id: String
+}
+
+type FeeEstimate {
+  recipient: String
+  token: TokenCollection
+  value: Float
+}
+
+type FeeRate {
+  bitcoin_fee_rate: Float!
+  litecoin_fee_rate: Float!
+}
+
+enum Network {
+  BASE
+  BITCOIN
+  ETHEREUM
+  LITECOIN
+  POLYGON
+  SOLANA
+  TRON
+}
+
+type Mutation {
+  
+}
+
+type SecretData {
+  client_id: String!
+  client_secret: String!
+}
+
+type Transaction {
+  address: Address
+  address_id: String
+  amount: Float!
+  created_at: String!
+  hash: String
+  id: String!
+  meta: String
+  recipient: String
+  reference: String
+  status: TransactionState!
+  token: Token!
+  tx_hash: String
+  type: TransactionFlow!
+}
+
+type TransactionCheck {
+  amount: Float
+  app_wallet: AppWallet
+  app_wallet_id: String
+  fee: Float
+  hash_ref: String
+  id: String!
+  network: Network
+  recipient: String
+  token: Token
+}
+
+enum TransactionFlow {
+  CREDIT
+  DEBIT
+}
+
+enum TransactionState {
+  FAILED
+  PENDING
+  SUCCESSFUL
+}
+
+enum TransactionType {
+  RECEIVING
+  REMITTANCE
+  SENDING
+  SWAP
+}
+
+
+type Token {
+  contract_address: String
+  name: String!
+  ticker: String!
+  token_set: String!
+}
+
+enum TokenCollection {
+  BITCOIN
+  DAI
+  ETHEREUM
+  LITECOIN
+  USDC
+  USDT
+}
+
+enum TokenSet {
+  ERC20
+  ERC721
+  NATIVE
+}
+
+```
+
+These types outline the response of each of the sdk functions based on the types outlined above.
+```ts
+
+type SDK {
+  getApp: App
+
+  createAddress(token_set: TokenCollection!): Address
+  createAddressCollection(uniqueId: String!): AddressSet
+  getFeeEstimate(network: Network! = ETHEREUM, recipient: String!, token: TokenCollection! = ETHEREUM, value: Float!): FeeEstimate
+  processTransaction(hash_ref: String!): Transaction
+  sendTokenCheck(amount: Float!, network: Network = ETHEREUM, recipient: String!, reference: String, token: TokenCollection!): TransactionCheck
+  sendTokens(amount: Float!, fee_rate: Float!, network: Network = ETHEREUM, recipient: String!, reference: String, sender: String, token: TokenCollection!): Transaction
+  generateClientSecret: SecretData
+  updateAppDetails(api_key: String, name: String, webhook_url: String): App
+
+  """Event Events for your token type and/or address"""
+  getEvents(address: String, token: String): [Event]
+
+  """getting the fee rate for a token"""
+  getFeeRate: FeeRate
+
+  """Apps or platforms registered with coincord core wallet."""
+  tokens: [Token]
+
+  """Apps or platforms registered with coincord core wallet."""
+  transactions(
+    network: Network!
+
+    """The Token of your app wallet"""
+    token_name: String!
+  ): [Transaction]
+}
+
+```
