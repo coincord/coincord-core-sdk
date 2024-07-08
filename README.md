@@ -203,6 +203,50 @@ This section outlines the types of the response data you would receive on every 
 
 ```ts
 
+enum TokenCollection {
+  BITCOIN
+  DAI
+  ETHEREUM
+  LITECOIN
+  USDC
+  USDT
+}
+
+enum TokenSet {
+  ERC20
+  ERC721
+  NATIVE
+}
+
+enum Network {
+  BASE
+  BITCOIN
+  ETHEREUM
+  LITECOIN
+  POLYGON
+  SOLANA
+  TRON
+}
+
+
+enum TransactionFlow {
+  CREDIT
+  DEBIT
+}
+
+enum TransactionState {
+  FAILED
+  PENDING
+  SUCCESSFUL
+}
+
+enum TransactionType {
+  RECEIVING
+  REMITTANCE
+  SENDING
+  SWAP
+}
+
 type Address {
   address: String!
   amount: Float!
@@ -279,20 +323,6 @@ type FeeRate {
   litecoin_fee_rate: Float!
 }
 
-enum Network {
-  BASE
-  BITCOIN
-  ETHEREUM
-  LITECOIN
-  POLYGON
-  SOLANA
-  TRON
-}
-
-type Mutation {
-  
-}
-
 type SecretData {
   client_id: String!
   client_secret: String!
@@ -326,24 +356,6 @@ type TransactionCheck {
   token: Token
 }
 
-enum TransactionFlow {
-  CREDIT
-  DEBIT
-}
-
-enum TransactionState {
-  FAILED
-  PENDING
-  SUCCESSFUL
-}
-
-enum TransactionType {
-  RECEIVING
-  REMITTANCE
-  SENDING
-  SWAP
-}
-
 
 type Token {
   contract_address: String
@@ -352,27 +364,12 @@ type Token {
   token_set: String!
 }
 
-enum TokenCollection {
-  BITCOIN
-  DAI
-  ETHEREUM
-  LITECOIN
-  USDC
-  USDT
-}
-
-enum TokenSet {
-  ERC20
-  ERC721
-  NATIVE
-}
-
 ```
 
 These types outline the response of each of the sdk functions based on the types outlined above.
 ```ts
 
-type SDK {
+type CoreSDK {
   getApp: App
 
   createAddress(token_set: TokenCollection!): Address
