@@ -139,7 +139,7 @@ export default class CoincordCoreWallet {
 
   async sendTokenCheck(request: {
     recipient: string;
-    reference: string | null;
+    reference?: string | null;
     amount: number;
     network: NetworkCollection;
     token: TokenCollectionType;
@@ -157,8 +157,8 @@ export default class CoincordCoreWallet {
 
   async sendTokens(request: {
     recipient: string;
-    sender: string | null;
-    reference: string | null;
+    sender?: string | null;
+    reference?: string | null;
     amount: number;
     fee_rate: number;
     network: NetworkCollection;
@@ -189,9 +189,9 @@ export default class CoincordCoreWallet {
 
   // App related Calls
   async updateAppDetails(request: {
-    name: string | undefined;
-    api_key: string | undefined;
-    webhook_url: string | undefined;
+    name?: string | undefined;
+    api_key?: string | undefined;
+    webhook_url?: string | undefined;
   }) {
     try {
       let response = await graphqlClient.request(updateAppDetails, {
