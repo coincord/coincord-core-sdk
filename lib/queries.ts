@@ -116,8 +116,8 @@ export const transactions = gql``;
 
 // mutations
 export const createAddress = gql`
-  mutation CREATE_NEW_ADDRESS($token_set: TokenCollection!) {
-    _createAddress(token_set: $token_set) {
+  mutation CREATE_NEW_ADDRESS($network: Network!, $token_set: TokenSet!) {
+    _createAddress(network: $network, token_set: $token_set) {
       id
       address
       created_at
@@ -148,6 +148,11 @@ export const createAddressCollection = gql`
         created_at
       }
       MULTI_ERC {
+        id
+        address
+        created_at
+      }
+      MULTI_TRC {
         id
         address
         created_at
