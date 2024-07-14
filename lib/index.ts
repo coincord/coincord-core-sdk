@@ -28,6 +28,7 @@ export type TokenCollectionType =
   | "DAI"
   | "USDC"
   | "USDT";
+export type TokenSet = "NATIVE" | "ERC20" | "TRC20" | "ERC721";
 export type NetworkCollection =
   | "BITCOIN"
   | "LITECOIN"
@@ -65,10 +66,11 @@ export default class CoincordCoreWallet {
     }
   }
 
-  async createAddress(token: TokenCollectionType) {
+  async createAddress(network: NetworkCollection, token: TokenSet) {
     let address;
     try {
       address = await graphqlClient.request(createAddress, {
+        network,
         token_set: token,
       });
       // console.log(address)

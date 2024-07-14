@@ -371,7 +371,7 @@ These types outline the response of each of the sdk functions based on the types
 type CoreSDK {
   getApp: App
 
-  createAddress(token_set: TokenCollection!): Address
+  createAddress(network: Network!, token_set: TokenSet!): Address
   createAddressCollection(uniqueId: String!): AddressSet
   getFeeEstimate(network: Network! = ETHEREUM, recipient: String!, token: TokenCollection! = ETHEREUM, value: Float!): FeeEstimate
   processTransaction(hash_ref: String!): Transaction
