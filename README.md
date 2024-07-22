@@ -90,7 +90,7 @@ let addresses = app.app_wallet.addresses
 Create your account address.
 ```ts
 // supported token types: BITCOIN, LITECOIN, ETHEREUM, USDC, USDT, DAI
-let address = coincordCoreCLient.createAddress("BITCOIN")
+let address = coincordCoreCLient.createAddress("BITCOIN","NATIVE")
 let address = address.address
 let tokenType = address.token_set
 ```
@@ -223,6 +223,7 @@ enum Network {
   ETHEREUM
   LITECOIN
   POLYGON
+  TRON
   // SOLANA
   // TRON
 }
