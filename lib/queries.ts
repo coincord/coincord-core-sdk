@@ -89,7 +89,6 @@ export const events = gql`
       reference
       token_name
       token {
-        id
         name
         token_set
       }
