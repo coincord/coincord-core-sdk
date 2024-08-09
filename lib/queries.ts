@@ -87,10 +87,10 @@ export const events = gql`
       event
       token_set
       reference
+      network
       token_name
       token {
         name
-        token_set
       }
       transaction {
         id
