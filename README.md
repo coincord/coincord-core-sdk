@@ -185,7 +185,7 @@ type EventRequest = {
     tx_hash: string | null;
     recipient: string | null;
   };
-  event: "INCOMING_TRANSACTION" | "OUTGOING_TRANSACTION" | "MINED_TRANSACTION"; 
+  event: "INCOMING_TRANSACTION" | "MINED_OUTGOING_TRANSACTION"; 
   token_set: string;
   amount: number;
   network: "BITCOIN" | "LITECOIN" | "POLYGON" | "TRON" | "ETHEREUM"
