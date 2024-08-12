@@ -116,6 +116,32 @@ Retrieve a list of events for a given token and address.
 let token = "BITCOIN";
 let address = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
 let events = await coincordCoreClient.getEvents(token, address);
+
+//  This is a response structure of the Event Data
+type EventRequest = {
+  address: Address;
+  sender_address: string;
+  transaction: {
+    id: string | null;
+    tx_hash: string | null;
+    recipient: string | null;
+    tx_hash: string
+    type: "CREDIT"
+    amount: number
+    status: "SUCCESSFUL" | "PENDING" | "FAILED",
+    address: {
+      address: string
+    }
+  };
+  event: "INCOMING_TRANSACTION" | "MINED_OUTGOING_TRANSACTION"; 
+  token_set: string;
+  amount: number;
+  network: "BITCOIN" | "LITECOIN" | "POLYGON" | "TRON" | "ETHEREUM"
+  reference: string | null;
+  details: string;
+  token_name: string;
+  created_at: Date;
+};
 ```
 
 ### Send Tokens Check
@@ -175,11 +201,11 @@ Coincord sends Webhook events with the structure
 ```ts
 
 type RequestBody = {
-  event: EventRequest
+  event: WebhookEventStructure
 }
 
-type EventRequest = {
-  address: string;
+type WebhookEventStructure = {
+  address: Address;
   transaction: {
     id: string | null;
     tx_hash: string | null;
@@ -194,6 +220,27 @@ type EventRequest = {
   token_name: string;
   created_at: Date;
 };
+```
+
+Example WebHook Event
+```
+{
+      "id": "8b6701da-942b-4479-ba69-42ece452edsdf",
+      "address": "0xEeda4524cfB7E70F1875F7A71E759cCb4e3d7Ebc",
+      "transaction": {
+        "id": "119d2797-3234-4205-8a10-134aa9b3de74",
+        "tx_hash": "0x65d22498e777c50db2b844e70da31eb8d60bb98162bad41002c7f6c55a9ac56e",
+        "recipient": null
+      },
+      "network": "ETHEREUM",
+      "reference": null,
+      "event": "INCOMING_TRANSACTION",
+      "token_set": "NATIVE",
+      "amount": 0.00259106,
+      "details": "received funds from 0x4976A4A02f38326660D17bf34b431dC6e2eb2327",
+      "token_name": "ETHEREUM",
+      "created_at": "2024-08-11T21:15:19.972Z"
+}
 ```
 
 The request header contains the API_KEY, confirm the API key on your end to confirm for certain that the webhook request is coming from the right source.
@@ -266,6 +313,7 @@ type AddressSet {
   ETHEREUM: Address!
   LITECOIN: Address!
   MULTI_ERC: Address!
+  MULTI_TRC: Address!
 }
 
 type App {
@@ -274,6 +322,7 @@ type App {
   created_at: String!
   id: String!
   name: String!
+  network: Network
   webhook_url: String
 }
 

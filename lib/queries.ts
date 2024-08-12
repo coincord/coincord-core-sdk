@@ -16,6 +16,7 @@ export const app = gql`
         id
         token_name
         token_set
+        network
         balance
         addresses {
           id
@@ -69,7 +70,6 @@ export const tokens = gql`
   query Tokens {
     tokens {
       name
-      token_set
       ticker
       contract_address
     }
@@ -87,10 +87,10 @@ export const events = gql`
       event
       token_set
       reference
+      network
       token_name
       token {
         name
-        token_set
       }
       transaction {
         id
