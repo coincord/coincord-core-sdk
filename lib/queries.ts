@@ -222,6 +222,9 @@ export const processTransaction = gql`
     _processTransaction(hash_ref: $hash_ref) {
       id
       tx_hash
+      address {
+        address
+      }
       reference
       hash
       amount
