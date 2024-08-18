@@ -205,7 +205,7 @@ type RequestBody = {
 }
 
 type WebhookEventStructure = {
-  address: Address;
+  address: Address | string;
   transaction: {
     id: string | null;
     tx_hash: string | null;
@@ -214,6 +214,7 @@ type WebhookEventStructure = {
   event: "INCOMING_TRANSACTION" | "MINED_OUTGOING_TRANSACTION"; 
   token_set: string;
   amount: number;
+  fee?: number;
   network: "BITCOIN" | "LITECOIN" | "POLYGON" | "TRON" | "ETHEREUM"
   reference: string | null;
   details: string;
