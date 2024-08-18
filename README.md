@@ -342,6 +342,7 @@ type Event {
   address: Address
   address_id: String
   amount: Float!
+  fee: Float!
   app: App!
   app_id: String!
   app_wallet: AppWallet
@@ -381,6 +382,7 @@ type Transaction {
   address: Address
   address_id: String
   amount: Float!
+  fee: Float!
   created_at: String!
   hash: String
   id: String!
