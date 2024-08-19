@@ -226,6 +226,7 @@ export const processTransaction = gql`
         address
       }
       reference
+      recipient
       hash
       amount
       status
