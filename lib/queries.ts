@@ -193,7 +193,7 @@ export const sendTokens = gql`
     $token: TokenCollection!
     $network: NetworkCollection
   ) {
-    address__sendTokens(
+    _sendTokens(
       recipient: $recipient
       sender: $sender
       amount: $amount
