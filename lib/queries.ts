@@ -115,7 +115,10 @@ export const transactions = gql``;
 
 // mutations
 export const createAddress = gql`
-  mutation CREATE_NEW_ADDRESS($network: Network!, $token_set: TokenSet!) {
+  mutation CREATE_NEW_ADDRESS(
+    $network: NetworkCollection!
+    $token_set: TokenSet!
+  ) {
     _createAddress(network: $network, token_set: $token_set) {
       id
       address
@@ -166,7 +169,7 @@ export const sendTokenCheck = gql`
     $reference: String
     $amount: Float!
     $token: TokenCollection!
-    $network: Network
+    $network: NetworkCollection
   ) {
     _sendTokenCheck(
       recipient: $recipient
@@ -238,7 +241,7 @@ export const getEstimateQuery = gql`
   mutation FEE_ESTIMATE(
     $token: TokenCollection!
     $value: Float!
-    $network: Network!
+    $network: NetworkCollection!
     $recipient: String!
   ) {
     _getEstimate(
