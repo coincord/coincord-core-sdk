@@ -6,21 +6,41 @@
 import { gql } from "graphql-request";
 
 // list queries
-export const app = gql`
-  query APP {
-    app {
+export const organization = gql`
+  query ORGANIZATION {
+    organization {
       id
       name
       webhook_url
+      access_level
+      created_at
+    }
+  }
+`;
+
+export const app = gql`
+  query APP {
+    organization {
+      id
+      name
+      webhook_url
+      access_level
+      created_at
       app_wallet {
         id
-        token_name
-        token_set
-        network
+        asset_name
+        asset_type
         balance
+        analytics_in
+        analytics_out
+        token_type
+        token_set
+        fiat_type
+        created_at
         addresses {
           id
           address
+          amount
         }
       }
     }
@@ -44,23 +64,29 @@ export const addresses = gql`
       amount
       created_at
       token_set
-      app {
+      organization {
         id
         name
+        webhook_url
       }
       token {
         name
         ticker
+        contract_address
+      }
+      app_wallet {
+        id
+        asset_name
+        balance
       }
       transactions {
         id
-        address_id
+        amount
         created_at
         tx_hash
-        amount
-        address {
-          address
-        }
+        status
+        recipient
+        reference
       }
     }
   }
@@ -72,6 +98,184 @@ export const tokens = gql`
       name
       ticker
       contract_address
+      token_set
+    }
+  }
+`;
+
+export const fiats = gql`
+  query Fiats {
+    fiats {
+      id
+      name
+      ticker
+    }
+  }
+`;
+
+export const appWallets = gql`
+  query AppWallets {
+    app_wallets {
+      id
+      app_id
+      asset_name
+      asset_type
+      balance
+      analytics_in
+      analytics_out
+      fiat_type
+      token_type
+      token_set
+      created_at
+      addresses {
+        id
+        address
+        amount
+      }
+      token {
+        name
+        ticker
+        contract_address
+      }
+      fiat {
+        id
+        name
+        ticker
+      }
+    }
+  }
+`;
+
+export const appWallet = gql`
+  query AppWallet($id: String!) {
+    app_wallet(id: $id) {
+      id
+      app_id
+      asset_name
+      asset_type
+      balance
+      analytics_in
+      analytics_out
+      fiat_type
+      token_type
+      token_set
+      created_at
+      addresses {
+        id
+        address
+        amount
+      }
+      token {
+        name
+        ticker
+        contract_address
+      }
+      fiat {
+        id
+        name
+        ticker
+      }
+      transactions {
+        id
+        amount
+        status
+        created_at
+        tx_hash
+      }
+    }
+  }
+`;
+
+export const appWalletTransactions = gql`
+  query AppWalletTransactions($appwallet: String!) {
+    app_wallet_transactions(appwallet: $appwallet) {
+      id
+      amount
+      amount_before
+      amount_after
+      created_at
+      status
+      type
+      asset_type
+      hash
+      recipient
+      reference
+      tx_hash
+      token {
+        name
+        ticker
+        contract_address
+      }
+    }
+  }
+`;
+
+export const customerVirtualAccount = gql`
+  query CustomerVirtualAccount($id: String!) {
+    customerVirtualAccount(id: $id) {
+      id
+      account_number
+      account_name
+      bank_name
+      currency
+      virtual_account_id
+      active
+      created_at
+      account_holder_id
+      account_holder {
+        id
+        first_name
+        last_name
+        email
+        phone_no
+        created_at
+      }
+    }
+  }
+`;
+
+export const accountHolders = gql`
+  query AccountHolders {
+    accountHolders {
+      id
+      first_name
+      last_name
+      email
+      phone_no
+      created_at
+      app_id
+      customer_virtual_accounts {
+        id
+        account_number
+        account_name
+        bank_name
+        currency
+        active
+      }
+    }
+  }
+`;
+
+export const transactionsQuery = gql`
+  query Transactions($network: Network!, $token_name: String!) {
+    transactions(network: $network, token_name: $token_name) {
+      id
+      amount
+      amount_before
+      amount_after
+      created_at
+      status
+      type
+      asset_type
+      hash
+      recipient
+      reference
+      tx_hash
+      token {
+        name
+        ticker
+        contract_address
+      }
     }
   }
 `;
@@ -83,6 +287,7 @@ export const events = gql`
       sender_address
       address {
         address
+        amount
       }
       event
       token_set
@@ -91,23 +296,24 @@ export const events = gql`
       token_name
       token {
         name
+        ticker
+        contract_address
       }
       transaction {
         id
-        address_id
+        amount
         recipient
         reference
         tx_hash
         type
         amount
         status
-        address {
-          address
-          id
-        }
+        created_at
       }
       details
       amount
+      created_at
+      app_id
     }
   }
 `;
@@ -116,7 +322,7 @@ export const transactions = gql``;
 // mutations
 export const createAddress = gql`
   mutation CREATE_NEW_ADDRESS(
-    $network: NetworkCollection!
+    $network: Network!
     $token_set: TokenSet!
   ) {
     _createAddress(network: $network, token_set: $token_set) {
@@ -124,8 +330,18 @@ export const createAddress = gql`
       address
       created_at
       token_set
+      organization {
+        id
+        name
+      }
       token {
         name
+        ticker
+        contract_address
+      }
+      app_wallet {
+        id
+        asset_name
       }
     }
   }
@@ -169,7 +385,7 @@ export const sendTokenCheck = gql`
     $reference: String
     $amount: Float!
     $token: TokenCollection!
-    $network: NetworkCollection
+    $network: Network
   ) {
     _sendTokenCheck(
       recipient: $recipient
@@ -182,6 +398,17 @@ export const sendTokenCheck = gql`
       recipient
       hash_ref
       amount
+      fee
+      network
+      app_wallet {
+        id
+        asset_name
+      }
+      token {
+        name
+        ticker
+        contract_address
+      }
     }
   }
 `;
@@ -190,11 +417,11 @@ export const sendTokens = gql`
   mutation _sendTokens(
     $recipient: String!
     $sender: String
-    $reference: String
+    $reference: String!
     $amount: Float!
     $fee_rate: Float!
     $token: TokenCollection!
-    $network: NetworkCollection
+    $network: Network!
   ) {
     _sendTokens(
       recipient: $recipient
@@ -212,9 +439,17 @@ export const sendTokens = gql`
       hash
       amount
       status
+      created_at
+      type
+      asset_type
       token {
-        token_set
         name
+        ticker
+        contract_address
+      }
+      address {
+        address
+        amount
       }
     }
   }
@@ -227,12 +462,21 @@ export const processTransaction = gql`
       tx_hash
       address {
         address
+        amount
       }
       reference
       recipient
       hash
       amount
       status
+      created_at
+      type
+      asset_type
+      token {
+        name
+        ticker
+        contract_address
+      }
     }
   }
 `;
@@ -241,7 +485,7 @@ export const getEstimateQuery = gql`
   mutation FEE_ESTIMATE(
     $token: TokenCollection!
     $value: Float!
-    $network: NetworkCollection!
+    $network: Network!
     $recipient: String!
   ) {
     _getEstimate(
@@ -280,6 +524,97 @@ export const updateAppDetails = gql`
       id
       name
       webhook_url
+    }
+  }
+`;
+
+export const createVirtualAccount = gql`
+  mutation CREATE_VIRTUAL_ACCOUNT($customer_data: CustomerData!) {
+    _createVirtualAccount(customer_data: $customer_data) {
+      id
+      bank_name
+      account_name
+      account_number
+    }
+  }
+`;
+
+export const generateAppWallet = gql`
+  mutation GENERATE_APP_WALLET(
+    $asset_type: AssetType!
+    $fiat_type: FiatType
+    $token_type: TokenCollection
+    $network: Network
+  ) {
+    generateAppWallet(
+      asset_type: $asset_type
+      fiat_type: $fiat_type
+      token_type: $token_type
+      network: $network
+    ) {
+      id
+      app_id
+      asset_name
+      asset_type
+      balance
+      analytics_in
+      analytics_out
+      fiat_type
+      token_type
+      token_set
+      created_at
+      token {
+        name
+        ticker
+        contract_address
+      }
+      fiat {
+        id
+        name
+        ticker
+      }
+    }
+  }
+`;
+
+export const sendFiatFunds = gql`
+  mutation SEND_FIAT_FUNDS(
+    $currency: Currency!
+    $bank_code: String!
+    $account_number: String!
+    $amount: Float!
+  ) {
+    _sendFiatFunds(
+      currency: $currency
+      bank_code: $bank_code
+      account_number: $account_number
+      amount: $amount
+    ) {
+      id
+      amount
+      status
+      created_at
+      recipient
+      reference
+      hash
+    }
+  }
+`;
+
+export const updateOrganization = gql`
+  mutation UPDATE_ORGANIZATION(
+    $name: String
+    $webhook_url: String
+  ) {
+    updateOrganization(
+      name: $name
+      webhook_url: $webhook_url
+    ) {
+      id
+      name
+      webhook_url
+      access_level
+      created_at
     }
   }
 `;

@@ -11,6 +11,7 @@ import {
   sendTokenCheck,
   processTransaction,
   app,
+  organization,
   feeRate,
   addresses,
   events,
@@ -19,6 +20,18 @@ import {
   sendTokens,
   updateAppDetails,
   generateClientSecret,
+  createVirtualAccount,
+  generateAppWallet,
+  sendFiatFunds,
+  updateOrganization,
+  appWallets,
+  appWallet,
+  appWalletTransactions,
+  customerVirtualAccount,
+  accountHolders,
+  transactionsQuery,
+  fiats,
+  tokens,
 } from "./queries";
 
 export type TokenCollectionType =
@@ -38,6 +51,37 @@ export type NetworkCollection =
   | "TRON"
   | "SOLANA";
 
+export type AssetType = "TOKEN" | "FIAT";
+export type FiatType = "NGN" | "USD" | "GHS" | "KES" | "XAF";
+export type Currency = "NGN" | "GHS";
+export type AccessLevel = "PREMIUM" | "STANDARD";
+export type TransactionFlow = "CREDIT" | "DEBIT";
+export type TransactionState = "FAILED" | "PENDING" | "SUCCESSFUL";
+
+export interface CustomerData {
+  first_name: string;
+  last_name: string;
+  identity: {
+    type: string;
+    number: string;
+    url: string;
+  };
+  country: string;
+  email: string;
+  phone_no: string;
+  dob: string;
+  bvn: string;
+  metadata: string;
+  address: {
+    address1: string;
+    address2: string;
+    city: string;
+    region: string;
+    postalCode: string;
+    country: string;
+  };
+}
+
 export default class CoincordCoreWallet {
   private graphqlClient: GraphQLClient;
   constructor() {
@@ -48,10 +92,21 @@ export default class CoincordCoreWallet {
     try {
       let appResponse = await graphqlClient.request(app);
       if (appResponse) {
-        return appResponse.app;
+        return appResponse.organization;
       }
     } catch (error) {
-      throw new Error("Address not found");
+      throw new Error("Organization not found");
+    }
+  }
+
+  async getOrganization() {
+    try {
+      let orgResponse = await graphqlClient.request(organization);
+      if (orgResponse) {
+        return orgResponse.organization;
+      }
+    } catch (error) {
+      throw new Error("Organization not found");
     }
   }
 
@@ -73,7 +128,6 @@ export default class CoincordCoreWallet {
         network,
         token_set: token,
       });
-      // console.log(address)
       return address._createAddress;
     } catch (error) {
       throw error;
@@ -90,7 +144,6 @@ export default class CoincordCoreWallet {
       );
 
       return addressCollection._createAddressCollection;
-      // console.log(address)
     } catch (error) {
       throw error;
     }
@@ -210,6 +263,142 @@ export default class CoincordCoreWallet {
     try {
       let response = await graphqlClient.request(generateClientSecret, {});
       return response.app_generateClientSecret;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async createVirtualAccount(customer_data: CustomerData) {
+    try {
+      let response = await graphqlClient.request(createVirtualAccount, {
+        customer_data,
+      });
+      return response._createVirtualAccount;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async generateAppWallet(request: {
+    asset_type: AssetType;
+    fiat_type?: FiatType;
+    token_type?: TokenCollectionType;
+    network?: NetworkCollection;
+  }) {
+    try {
+      let response = await graphqlClient.request(generateAppWallet, {
+        ...request,
+      });
+      return response.generateAppWallet;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getAppWallets() {
+    try {
+      let response = await graphqlClient.request(appWallets);
+      return response.app_wallets;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAppWallet(id: string) {
+    try {
+      let response = await graphqlClient.request(appWallet, { id });
+      return response.app_wallet;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAppWalletTransactions(appwallet: string) {
+    try {
+      let response = await graphqlClient.request(appWalletTransactions, { appwallet });
+      return response.app_wallet_transactions;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendFiatFunds(request: {
+    currency: Currency;
+    bank_code: string;
+    account_number: string;
+    amount: number;
+  }) {
+    try {
+      let response = await graphqlClient.request(sendFiatFunds, {
+        ...request,
+      });
+      return response._sendFiatFunds;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getCustomerVirtualAccount(id: string) {
+    try {
+      let response = await graphqlClient.request(customerVirtualAccount, { id });
+      return response.customerVirtualAccount;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAccountHolders() {
+    try {
+      let response = await graphqlClient.request(accountHolders);
+      return response.accountHolders;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFiats() {
+    try {
+      let response = await graphqlClient.request(fiats);
+      return response.fiats;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getTokens() {
+    try {
+      let response = await graphqlClient.request(tokens);
+      return response.tokens;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getTransactions(network: NetworkCollection, token_name: string) {
+    try {
+      let response = await graphqlClient.request(transactionsQuery, {
+        network,
+        token_name,
+      });
+      return response.transactions;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateOrganization(request: {
+    name?: string;
+    webhook_url?: string;
+  }) {
+    try {
+      let response = await graphqlClient.request(updateOrganization, {
+        ...request,
+      });
+      return response.updateOrganization;
     } catch (error) {
       console.log(error);
       throw error;

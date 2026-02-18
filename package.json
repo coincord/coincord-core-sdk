@@ -1,7 +1,7 @@
 {
   "name": "@coincord/coincord-core-sdk-wallet",
-  "version": "0.1.8-alpha.10",
-  "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
+  "version": "0.2.0-alpha.1",
+  "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets, plus virtual account generation and enhanced app wallet management.",
   "main": "dist/lib/index.js",
   "publishConfig": {
     "@coincord:registry": "https://npm.pkg.github.com"
@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/node": "^14.0.27",
     "dotenv": "^8.2.0",
+    "graphql": "^16.12.0",
     "graphql-request": "^4.3.0"
   },
   "directories": {
