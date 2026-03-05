@@ -32,6 +32,8 @@ import {
   transactionsQuery,
   fiats,
   tokens,
+  resolveBankAccount,
+  resolve_bank,
 } from "./queries";
 
 export type TokenCollectionType =
@@ -80,6 +82,21 @@ export interface CustomerData {
     postalCode: string;
     country: string;
   };
+}
+
+export type Nullable<T> = null | T;
+
+export interface Transaction {
+  amount: number;
+  created_at: string;
+  id: string;
+  status: TransactionState;
+  fiat_type: string;
+  token_type: string;
+  type: TransactionFlow;
+  hash?: Nullable<string>;
+  reference?: Nullable<string>;
+  tx_hash?: Nullable<string>;
 }
 
 export default class CoincordCoreWallet {
@@ -140,7 +157,7 @@ export default class CoincordCoreWallet {
         createAddressCollection,
         {
           uniqueId: uniqueId,
-        }
+        },
       );
 
       return addressCollection._createAddressCollection;
@@ -153,7 +170,7 @@ export default class CoincordCoreWallet {
     token: TokenCollectionType,
     value: number,
     recipient: string,
-    network: NetworkCollection
+    network: NetworkCollection,
   ) {
     let estimateObject;
     try {
@@ -318,7 +335,9 @@ export default class CoincordCoreWallet {
 
   async getAppWalletTransactions(appwallet: string) {
     try {
-      let response = await graphqlClient.request(appWalletTransactions, { appwallet });
+      let response = await graphqlClient.request(appWalletTransactions, {
+        appwallet,
+      });
       return response.app_wallet_transactions;
     } catch (error) {
       throw error;
@@ -335,7 +354,7 @@ export default class CoincordCoreWallet {
       let response = await graphqlClient.request(sendFiatFunds, {
         ...request,
       });
-      return response._sendFiatFunds;
+      return response._sendFiatFunds as Transaction;
     } catch (error) {
       console.log(error);
       throw error;
@@ -344,7 +363,9 @@ export default class CoincordCoreWallet {
 
   async getCustomerVirtualAccount(id: string) {
     try {
-      let response = await graphqlClient.request(customerVirtualAccount, { id });
+      let response = await graphqlClient.request(customerVirtualAccount, {
+        id,
+      });
       return response.customerVirtualAccount;
     } catch (error) {
       throw error;
@@ -378,6 +399,18 @@ export default class CoincordCoreWallet {
     }
   }
 
+  async resolveBankAccount(input: { code: string; account: string }) {
+    try {
+      let response = await graphqlClient.request(resolve_bank, {
+        input: {
+          bank_code: input.code,
+          account_number: input.account,
+        },
+      });
+      return response.resolveBankAccount;
+    } catch (error) {}
+  }
+
   async getTransactions(network: NetworkCollection, token_name: string) {
     try {
       let response = await graphqlClient.request(transactionsQuery, {
@@ -390,10 +423,7 @@ export default class CoincordCoreWallet {
     }
   }
 
-  async updateOrganization(request: {
-    name?: string;
-    webhook_url?: string;
-  }) {
+  async updateOrganization(request: { name?: string; webhook_url?: string }) {
     try {
       let response = await graphqlClient.request(updateOrganization, {
         ...request,

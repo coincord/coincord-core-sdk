@@ -92,6 +92,15 @@ export const addresses = gql`
   }
 `;
 
+export const resolve_bank = gql`
+  query ResolveBankAccount($input: ResolveCallInput) {
+    resolveBankAccount(input: $input) {
+      account_name
+      message
+    }
+  }
+`;
+
 export const tokens = gql`
   query Tokens {
     tokens {
@@ -321,10 +330,7 @@ export const transactions = gql``;
 
 // mutations
 export const createAddress = gql`
-  mutation CREATE_NEW_ADDRESS(
-    $network: Network!
-    $token_set: TokenSet!
-  ) {
+  mutation CREATE_NEW_ADDRESS($network: Network!, $token_set: TokenSet!) {
     _createAddress(network: $network, token_set: $token_set) {
       id
       address
@@ -602,14 +608,8 @@ export const sendFiatFunds = gql`
 `;
 
 export const updateOrganization = gql`
-  mutation UPDATE_ORGANIZATION(
-    $name: String
-    $webhook_url: String
-  ) {
-    updateOrganization(
-      name: $name
-      webhook_url: $webhook_url
-    ) {
+  mutation UPDATE_ORGANIZATION($name: String, $webhook_url: String) {
+    updateOrganization(name: $name, webhook_url: $webhook_url) {
       id
       name
       webhook_url
