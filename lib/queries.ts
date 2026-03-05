@@ -589,12 +589,14 @@ export const sendFiatFunds = gql`
     $bank_code: String!
     $account_number: String!
     $amount: Float!
+    $reference: String
   ) {
     _sendFiatFunds(
       currency: $currency
       bank_code: $bank_code
       account_number: $account_number
       amount: $amount
+      reference: $reference
     ) {
       id
       amount
