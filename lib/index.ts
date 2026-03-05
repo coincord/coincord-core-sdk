@@ -32,7 +32,6 @@ import {
   transactionsQuery,
   fiats,
   tokens,
-  resolveBankAccount,
   resolve_bank,
 } from "./queries";
 
