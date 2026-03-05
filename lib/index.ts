@@ -348,6 +348,7 @@ export default class CoincordCoreWallet {
     bank_code: string;
     account_number: string;
     amount: number;
+    reference: string;
   }) {
     try {
       let response = await graphqlClient.request(sendFiatFunds, {
