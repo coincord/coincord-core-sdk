@@ -620,3 +620,81 @@ export const updateOrganization = gql`
     }
   }
 `;
+
+// banking partner queries
+export const orgBankingPartners = gql`
+  query OrgBankingPartners {
+    orgBankingPartners {
+      id
+      partner
+      operation
+      currency
+      active
+      created_at
+    }
+  }
+`;
+
+export const availableBankingPartners = gql`
+  query AvailableBankingPartners {
+    availableBankingPartners {
+      name
+      supported_operations
+      supported_currencies
+    }
+  }
+`;
+
+export const effectiveBankingPartner = gql`
+  query EffectiveBankingPartner(
+    $operation: BankingPartnerOperation!
+    $currency: FiatType
+  ) {
+    effectiveBankingPartner(operation: $operation, currency: $currency) {
+      partner
+      operation
+      currency
+      source
+    }
+  }
+`;
+
+export const listBanks = gql`
+  query ListBanks {
+    list_banks {
+      name
+      code
+    }
+  }
+`;
+
+// banking partner mutations
+export const setBankingPartner = gql`
+  mutation SET_BANKING_PARTNER(
+    $partner: String!
+    $operation: BankingPartnerOperation!
+    $currency: FiatType
+  ) {
+    setBankingPartner(
+      partner: $partner
+      operation: $operation
+      currency: $currency
+    ) {
+      id
+      partner
+      operation
+      currency
+      active
+      created_at
+    }
+  }
+`;
+
+export const removeBankingPartner = gql`
+  mutation REMOVE_BANKING_PARTNER(
+    $operation: BankingPartnerOperation!
+    $currency: FiatType
+  ) {
+    removeBankingPartner(operation: $operation, currency: $currency)
+  }
+`;

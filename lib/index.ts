@@ -33,6 +33,12 @@ import {
   fiats,
   tokens,
   resolve_bank,
+  orgBankingPartners,
+  availableBankingPartners,
+  effectiveBankingPartner,
+  listBanks,
+  setBankingPartner,
+  removeBankingPartner,
 } from "./queries";
 
 export type TokenCollectionType =
@@ -58,6 +64,18 @@ export type Currency = "NGN" | "GHS";
 export type AccessLevel = "PREMIUM" | "STANDARD";
 export type TransactionFlow = "CREDIT" | "DEBIT";
 export type TransactionState = "FAILED" | "PENDING" | "SUCCESSFUL";
+export type TransactionType = "RECEIVING" | "REMITTANCE" | "SENDING" | "SWAP";
+export type IdentityType =
+  | "INTERNATIONAL_PASSPORT"
+  | "DRIVERS_LICENSE"
+  | "NIN"
+  | "SSN"
+  | "VOTERS_CARD"
+  | "PASSPORT";
+export type BankingPartnerOperation =
+  | "VIRTUAL_ACCOUNTS"
+  | "REMITTANCE"
+  | "DEFAULT";
 
 export interface CustomerData {
   first_name: string;
@@ -429,6 +447,78 @@ export default class CoincordCoreWallet {
         ...request,
       });
       return response.updateOrganization;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getOrgBankingPartners() {
+    try {
+      let response = await graphqlClient.request(orgBankingPartners);
+      return response.orgBankingPartners;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAvailableBankingPartners() {
+    try {
+      let response = await graphqlClient.request(availableBankingPartners);
+      return response.availableBankingPartners;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getEffectiveBankingPartner(request: {
+    operation: BankingPartnerOperation;
+    currency?: FiatType;
+  }) {
+    try {
+      let response = await graphqlClient.request(effectiveBankingPartner, {
+        ...request,
+      });
+      return response.effectiveBankingPartner;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async listBanks() {
+    try {
+      let response = await graphqlClient.request(listBanks);
+      return response.list_banks;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setBankingPartner(request: {
+    partner: string;
+    operation: BankingPartnerOperation;
+    currency?: FiatType;
+  }) {
+    try {
+      let response = await graphqlClient.request(setBankingPartner, {
+        ...request,
+      });
+      return response.setBankingPartner;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async removeBankingPartner(request: {
+    operation: BankingPartnerOperation;
+    currency?: FiatType;
+  }) {
+    try {
+      let response = await graphqlClient.request(removeBankingPartner, {
+        ...request,
+      });
+      return response.removeBankingPartner as boolean;
     } catch (error) {
       console.log(error);
       throw error;
