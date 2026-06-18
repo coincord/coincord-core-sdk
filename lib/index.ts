@@ -39,6 +39,9 @@ import {
   listBanks,
   setBankingPartner,
   removeBankingPartner,
+  createBusinessCustomer,
+  resubmitBusinessCustomerDocument,
+  businessCustomerAccounts,
 } from "./queries";
 
 export type TokenCollectionType =
@@ -76,6 +79,91 @@ export type BankingPartnerOperation =
   | "VIRTUAL_ACCOUNTS"
   | "REMITTANCE"
   | "DEFAULT";
+
+export type OfficerRole = "DIRECTOR" | "OWNER" | "SECRETARY";
+export type AnchorDocType =
+  | "FORM_CAC_3"
+  | "RC_NUMBER"
+  | "CERTIFICATE_OF_INCORPORATION"
+  | "PROOF_OF_ADDRESS";
+
+export interface BusinessCustomerAddress {
+  country: string;
+  state: string;
+  city: string;
+  addressLine1: string;
+  addressLine2?: string;
+  postalCode?: string;
+}
+
+export interface BusinessCustomerContact {
+  phoneNumber: string;
+  emailGeneral: string;
+  emailSupport?: string;
+  emailDispute?: string;
+}
+
+export interface BusinessCustomerOfficer {
+  role: OfficerRole;
+  title?: string;
+  nationality: string;
+  bvn: string;
+  email: string;
+  phoneNumber: string;
+  /** ISO 8601 date string e.g. 1990-01-15 */
+  dateOfBirth: string;
+  percentageOwned: number;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  maidenName?: string;
+  address: BusinessCustomerAddress;
+}
+
+export interface BusinessCustomerDocument {
+  type: AnchorDocType;
+  /** Multipart file upload or a publicly accessible URL string */
+  file: File | Blob | string;
+}
+
+export interface BusinessCustomerInput {
+  business_name: string;
+  business_bvn: string;
+  industry: string;
+  registration_type: string;
+  country: string;
+  /** ISO 8601 date string e.g. 2010-06-01 */
+  date_of_registration: string;
+  description: string;
+  website?: string;
+  rc_tin: string;
+  addressCountry: string;
+  addressState: string;
+  addressLine: string;
+  addressCity: string;
+  addressPostal: string;
+  phone: string;
+  contact: BusinessCustomerContact;
+  officers: BusinessCustomerOfficer[];
+  documents?: BusinessCustomerDocument[];
+}
+
+export interface BusinessCustomerResult {
+  id: string;
+  business_name: string;
+  anchor_reference_id: Nullable<string>;
+  created_at: string;
+}
+
+export interface BusinessCustomerAccount {
+  id: string;
+  account_number: string;
+  account_name: string;
+  bank_name: string;
+  currency: string;
+  active: boolean;
+  created_at: string;
+}
 
 export interface CustomerData {
   first_name: string;
@@ -521,6 +609,46 @@ export default class CoincordCoreWallet {
       return response.removeBankingPartner as boolean;
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+
+  async createBusinessCustomer(business_data: BusinessCustomerInput) {
+    try {
+      let response = await graphqlClient.request(createBusinessCustomer, {
+        business_data,
+      });
+      return response.createBusinessCustomer as BusinessCustomerResult;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async resubmitBusinessCustomerDocument(request: {
+    business_customer_id: string;
+    type: AnchorDocType;
+    file: File | Blob | string;
+  }) {
+    try {
+      let response = await graphqlClient.request(
+        resubmitBusinessCustomerDocument,
+        { ...request },
+      );
+      return response.resubmitBusinessCustomerDocument as boolean;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getBusinessCustomerAccounts(business_customer_id: string) {
+    try {
+      let response = await graphqlClient.request(businessCustomerAccounts, {
+        business_customer_id,
+      });
+      return response.businessCustomerAccounts as BusinessCustomerAccount[];
+    } catch (error) {
       throw error;
     }
   }
