@@ -12,6 +12,7 @@ const graphQLClient = new GraphQLClient(
       "Client-Id": <string>process.env.COINCORD_CORE_HOST_CLIENT_ID,
       "Client-Secret": <string>process.env.COINCORD_CORE_HOST_CLIENT_SECRET,
       "x-api-key": <string>process.env.COINCORD_CORE_HOST_CLIENT_SECRET,
+      "apollo-require-preflight": "1",
     },
   },
 );
