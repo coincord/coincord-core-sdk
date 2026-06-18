@@ -698,3 +698,44 @@ export const removeBankingPartner = gql`
     removeBankingPartner(operation: $operation, currency: $currency)
   }
 `;
+
+// business customer mutations
+export const createBusinessCustomer = gql`
+  mutation CREATE_BUSINESS_CUSTOMER($business_data: BusinessCustomerInput!) {
+    createBusinessCustomer(business_data: $business_data) {
+      id
+      business_name
+      anchor_reference_id
+      created_at
+    }
+  }
+`;
+
+export const resubmitBusinessCustomerDocument = gql`
+  mutation RESUBMIT_BUSINESS_CUSTOMER_DOCUMENT(
+    $business_customer_id: String!
+    $type: AnchorDocType!
+    $file: Upload!
+  ) {
+    resubmitBusinessCustomerDocument(
+      business_customer_id: $business_customer_id
+      type: $type
+      file: $file
+    )
+  }
+`;
+
+// business customer queries
+export const businessCustomerAccounts = gql`
+  query BusinessCustomerAccounts($business_customer_id: String!) {
+    businessCustomerAccounts(business_customer_id: $business_customer_id) {
+      id
+      account_number
+      account_name
+      bank_name
+      currency
+      active
+      created_at
+    }
+  }
+`;

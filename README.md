@@ -452,3 +452,314 @@ type CoreSDK {
 }
 
 ```
+
+---
+
+## Business Customer (KYB)
+
+The SDK supports registering business entities and managing their KYB (Know Your Business) lifecycle through the active banking partner. This includes creating a business customer, resubmitting rejected documents, and listing provisioned virtual accounts.
+
+---
+
+### `createBusinessCustomer`
+
+Registers a new business customer with the active banking partner and initiates the KYB process. Returns a record that can be used to track the business customer by ID.
+
+**GraphQL mutation:** `CREATE_BUSINESS_CUSTOMER`
+
+```ts
+const result = await coincordCoreClient.createBusinessCustomer({
+  business_name: "Acme Ltd",
+  business_bvn: "12345678901",
+  industry: "Fintech",
+  registration_type: "LLC",
+  country: "NG",
+  date_of_registration: "2015-03-20",   // ISO 8601
+  description: "A fintech company",
+  website: "https://acme.example.com",  // optional
+  rc_tin: "RC123456",
+  addressCountry: "NG",
+  addressState: "Lagos",
+  addressLine: "14 Marina Street",
+  addressCity: "Lagos",
+  addressPostal: "100001",
+  phone: "+2348012345678",
+  contact: {
+    phoneNumber: "+2348012345678",
+    emailGeneral: "hello@acme.example.com",
+    emailSupport: "support@acme.example.com",   // optional
+    emailDispute: "disputes@acme.example.com",  // optional
+  },
+  officers: [
+    {
+      role: "DIRECTOR",
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "jane.doe@acme.example.com",
+      phoneNumber: "+2348098765432",
+      nationality: "NG",
+      bvn: "98765432100",
+      dateOfBirth: "1985-07-10",   // ISO 8601
+      percentageOwned: 51,
+      address: {
+        country: "NG",
+        state: "Lagos",
+        city: "Lagos",
+        addressLine1: "14 Marina Street",
+        addressLine2: "Floor 3",   // optional
+        postalCode: "100001",      // optional
+      },
+    },
+  ],
+  documents: [
+    {
+      type: "CERTIFICATE_OF_INCORPORATION",
+      file: incorporationFile,   // File | Blob | string (public URL)
+    },
+    {
+      type: "RC_NUMBER",
+      file: "https://storage.example.com/rc-number.pdf",
+    },
+  ],
+});
+
+console.log(result.id);                    // internal business customer ID
+console.log(result.business_name);
+console.log(result.anchor_reference_id);  // banking partner reference (nullable)
+console.log(result.created_at);
+```
+
+**Input type — `BusinessCustomerInput`**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `business_name` | `string` | ✓ | Legal business name |
+| `business_bvn` | `string` | ✓ | BVN linked to the business |
+| `industry` | `string` | ✓ | Industry sector |
+| `registration_type` | `string` | ✓ | e.g. `"LLC"`, `"PLC"` |
+| `country` | `string` | ✓ | ISO 3166-1 alpha-2 country code |
+| `date_of_registration` | `string` | ✓ | ISO 8601 date e.g. `"2015-03-20"` |
+| `description` | `string` | ✓ | Short business description |
+| `website` | `string` | — | Publicly accessible website URL |
+| `rc_tin` | `string` | ✓ | RC or TIN number |
+| `addressCountry` | `string` | ✓ | Registered address country |
+| `addressState` | `string` | ✓ | Registered address state/region |
+| `addressLine` | `string` | ✓ | Street address line |
+| `addressCity` | `string` | ✓ | City |
+| `addressPostal` | `string` | ✓ | Postal / zip code |
+| `phone` | `string` | ✓ | Business phone number |
+| `contact` | `BusinessCustomerContact` | ✓ | Contact email configuration |
+| `officers` | `BusinessCustomerOfficer[]` | ✓ | At least one officer required |
+| `documents` | `BusinessCustomerDocument[]` | — | KYB supporting documents |
+
+**`BusinessCustomerContact`**
+
+| Field | Type | Required |
+|---|---|---|
+| `phoneNumber` | `string` | ✓ |
+| `emailGeneral` | `string` | ✓ |
+| `emailSupport` | `string` | — |
+| `emailDispute` | `string` | — |
+
+**`BusinessCustomerOfficer`**
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `role` | `OfficerRole` | ✓ | `"DIRECTOR"` \| `"OWNER"` \| `"SECRETARY"` |
+| `firstName` | `string` | ✓ | |
+| `lastName` | `string` | ✓ | |
+| `middleName` | `string` | — | |
+| `maidenName` | `string` | — | |
+| `title` | `string` | — | |
+| `nationality` | `string` | ✓ | ISO 3166-1 alpha-2 |
+| `bvn` | `string` | ✓ | |
+| `email` | `string` | ✓ | |
+| `phoneNumber` | `string` | ✓ | |
+| `dateOfBirth` | `string` | ✓ | ISO 8601 e.g. `"1985-07-10"` |
+| `percentageOwned` | `number` | ✓ | `0–100` |
+| `address` | `BusinessCustomerAddress` | ✓ | Residential address |
+
+**`BusinessCustomerDocument`**
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `type` | `AnchorDocType` | ✓ | See document types below |
+| `file` | `File \| Blob \| string` | ✓ | Multipart upload or a publicly accessible URL |
+
+**`AnchorDocType` values**
+
+| Value | Description |
+|---|---|
+| `FORM_CAC_3` | CAC Form 3 (particulars of directors) |
+| `RC_NUMBER` | RC number certificate |
+| `CERTIFICATE_OF_INCORPORATION` | Certificate of incorporation |
+| `PROOF_OF_ADDRESS` | Proof of business address |
+
+**Response — `BusinessCustomerResult`**
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Internal business customer ID |
+| `business_name` | `string` | |
+| `anchor_reference_id` | `string \| null` | Banking partner reference ID |
+| `created_at` | `string` | ISO 8601 timestamp |
+
+---
+
+### `resubmitBusinessCustomerDocument`
+
+Replaces a previously uploaded document that was rejected by the banking partner. The new file is used the next time the provider requests that document type for KYB review.
+
+**GraphQL mutation:** `RESUBMIT_BUSINESS_CUSTOMER_DOCUMENT`
+
+```ts
+const success = await coincordCoreClient.resubmitBusinessCustomerDocument({
+  business_customer_id: "biz_cust_abc123",
+  type: "CERTIFICATE_OF_INCORPORATION",
+  file: updatedCertFile,   // File | Blob | string (public URL)
+});
+
+if (success) {
+  console.log("Document resubmitted successfully.");
+}
+```
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `business_customer_id` | `string` | ✓ | ID from `createBusinessCustomer` response |
+| `type` | `AnchorDocType` | ✓ | The document type being replaced |
+| `file` | `File \| Blob \| string` | ✓ | Replacement file — multipart upload or public URL |
+
+**Response:** `boolean` — `true` on success, throws on failure.
+
+> **Note on file uploads:** When passing a `File` or `Blob`, the SDK relies on `graphql-request`'s built-in multipart form-data support. When passing a `string`, it must be a publicly accessible URL that the banking partner can fetch directly.
+
+---
+
+### `getBusinessCustomerAccounts`
+
+Lists all virtual accounts provisioned for a registered business customer.
+
+**GraphQL query:** `BusinessCustomerAccounts`
+
+```ts
+const accounts = await coincordCoreClient.getBusinessCustomerAccounts(
+  "biz_cust_abc123"
+);
+
+accounts.forEach((account) => {
+  console.log(account.account_number);
+  console.log(account.bank_name);
+  console.log(account.currency);
+  console.log(account.active);
+});
+```
+
+**Parameters**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `business_customer_id` | `string` | ✓ | ID from `createBusinessCustomer` response |
+
+**Response — `BusinessCustomerAccount[]`**
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Virtual account ID |
+| `account_number` | `string` | |
+| `account_name` | `string` | |
+| `bank_name` | `string` | |
+| `currency` | `string` | Currency code e.g. `"NGN"` |
+| `active` | `boolean` | Whether the account is active |
+| `created_at` | `string` | ISO 8601 timestamp |
+
+---
+
+### Business Customer Types Reference
+
+```ts
+type OfficerRole = "DIRECTOR" | "OWNER" | "SECRETARY";
+
+type AnchorDocType =
+  | "FORM_CAC_3"
+  | "RC_NUMBER"
+  | "CERTIFICATE_OF_INCORPORATION"
+  | "PROOF_OF_ADDRESS";
+
+interface BusinessCustomerAddress {
+  country: string;
+  state: string;
+  city: string;
+  addressLine1: string;
+  addressLine2?: string;
+  postalCode?: string;
+}
+
+interface BusinessCustomerContact {
+  phoneNumber: string;
+  emailGeneral: string;
+  emailSupport?: string;
+  emailDispute?: string;
+}
+
+interface BusinessCustomerOfficer {
+  role: OfficerRole;
+  title?: string;
+  nationality: string;
+  bvn: string;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string;        // ISO 8601
+  percentageOwned: number;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  maidenName?: string;
+  address: BusinessCustomerAddress;
+}
+
+interface BusinessCustomerDocument {
+  type: AnchorDocType;
+  file: File | Blob | string;
+}
+
+interface BusinessCustomerInput {
+  business_name: string;
+  business_bvn: string;
+  industry: string;
+  registration_type: string;
+  country: string;
+  date_of_registration: string;  // ISO 8601
+  description: string;
+  website?: string;
+  rc_tin: string;
+  addressCountry: string;
+  addressState: string;
+  addressLine: string;
+  addressCity: string;
+  addressPostal: string;
+  phone: string;
+  contact: BusinessCustomerContact;
+  officers: BusinessCustomerOfficer[];
+  documents?: BusinessCustomerDocument[];
+}
+
+interface BusinessCustomerResult {
+  id: string;
+  business_name: string;
+  anchor_reference_id: string | null;
+  created_at: string;
+}
+
+interface BusinessCustomerAccount {
+  id: string;
+  account_number: string;
+  account_name: string;
+  bank_name: string;
+  currency: string;
+  active: boolean;
+  created_at: string;
+}
+```
