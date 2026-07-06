@@ -63,9 +63,19 @@ export async function multipartFetch<T = any>(
     body: form,
   });
 
+  if (!res.ok) {
+    const body = await res.text().catch(() => "(unreadable body)");
+    throw new Error(`multipartFetch: HTTP ${res.status} ${res.statusText} — ${body}`);
+  }
+
   const json = await res.json();
   if (json.errors?.length) {
     throw new Error(json.errors[0].message);
+  }
+  if (json.data === undefined) {
+    throw new Error(
+      `multipartFetch: no data field in GraphQL response — ${JSON.stringify(json)}`,
+    );
   }
   return json.data as T;
 }
