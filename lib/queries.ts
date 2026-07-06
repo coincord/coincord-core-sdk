@@ -701,8 +701,16 @@ export const removeBankingPartner = gql`
 
 // business customer mutations
 export const createBusinessCustomer = gql`
-  mutation CREATE_BUSINESS_CUSTOMER($business_data: BusinessCustomerInput!) {
-    createBusinessCustomer(business_data: $business_data) {
+  mutation CREATE_BUSINESS_CUSTOMER(
+    $business_data: BusinessCustomerInput!
+    $documents: [BusinessCustomerDocumentInput!]
+    $files: [Upload!]
+  ) {
+    createBusinessCustomer(
+      business_data: $business_data
+      documents: $documents
+      files: $files
+    ) {
       id
       business_name
       anchor_reference_id

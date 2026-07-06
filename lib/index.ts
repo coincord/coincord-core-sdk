@@ -5,7 +5,7 @@
 
 require("dotenv").config();
 import { GraphQLClient } from "graphql-request";
-import graphqlClient from "./requester";
+import graphqlClient, { multipartFetch } from "./requester";
 import {
   createAddress,
   sendTokenCheck,
@@ -122,8 +122,7 @@ export interface BusinessCustomerOfficer {
 
 export interface BusinessCustomerDocument {
   type: AnchorDocType;
-  /** Multipart file upload or a publicly accessible URL string */
-  file: File | Blob | string;
+  file: File | Blob;
 }
 
 export interface BusinessCustomerInput {
@@ -615,10 +614,32 @@ export default class CoincordCoreWallet {
 
   async createBusinessCustomer(business_data: BusinessCustomerInput) {
     try {
-      let response = await graphqlClient.request(createBusinessCustomer, {
-        business_data,
-      });
-      return response.createBusinessCustomer as BusinessCustomerResult;
+      const { documents, ...rest } = business_data;
+
+      if (!documents?.length) {
+        const response = await graphqlClient.request(createBusinessCustomer, {
+          business_data: rest,
+          documents: null,
+          files: null,
+        });
+        return response.createBusinessCustomer as BusinessCustomerResult;
+      }
+
+      const data = await multipartFetch<{
+        createBusinessCustomer: BusinessCustomerResult;
+      }>(
+        createBusinessCustomer,
+        {
+          business_data: rest,
+          documents: documents.map((d) => ({ type: d.type })),
+          files: documents.map(() => null), // nulled out — replaced by map entries
+        },
+        documents.map((d, i) => ({
+          variablePath: `variables.files.${i}`,
+          file: d.file,
+        })),
+      );
+      return data.createBusinessCustomer;
     } catch (error) {
       console.log(error);
       throw error;
@@ -628,14 +649,21 @@ export default class CoincordCoreWallet {
   async resubmitBusinessCustomerDocument(request: {
     business_customer_id: string;
     type: AnchorDocType;
-    file: File | Blob | string;
+    file: File | Blob;
   }) {
     try {
-      let response = await graphqlClient.request(
+      const data = await multipartFetch<{
+        resubmitBusinessCustomerDocument: boolean;
+      }>(
         resubmitBusinessCustomerDocument,
-        { ...request },
+        {
+          business_customer_id: request.business_customer_id,
+          type: request.type,
+          file: null,
+        },
+        [{ variablePath: "variables.file", file: request.file }],
       );
-      return response.resubmitBusinessCustomerDocument as boolean;
+      return data.resubmitBusinessCustomerDocument;
     } catch (error) {
       console.log(error);
       throw error;
