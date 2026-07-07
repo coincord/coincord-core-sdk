@@ -616,6 +616,7 @@ export default class CoincordCoreWallet {
     try {
       const { documents, ...rest } = business_data;
 
+      console.log("Request in progress", rest);
       if (!documents?.length) {
         const response = await graphqlClient.request(createBusinessCustomer, {
           business_data: rest,
