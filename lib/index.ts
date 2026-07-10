@@ -85,6 +85,9 @@ export type AnchorDocType =
   | "FORM_CAC_3"
   | "RC_NUMBER"
   | "CERTIFICATE_OF_INCORPORATION"
+  | "MEMORANDUM_OF_ASSOCIATION"
+  | "CAC_STATUS_REPORT"
+  | "TIN"
   | "PROOF_OF_ADDRESS";
 
 export interface BusinessCustomerAddress {
@@ -163,6 +166,19 @@ export interface BusinessCustomerAccount {
   active: boolean;
   created_at: string;
 }
+
+export interface CountryType {
+  name: string;
+  countryCode: string;
+  phoneCode: string;
+  capital: string;
+  currency: string;
+  currencyName: string;
+  region: string;
+  subregion: string;
+}
+
+export interface CityType {}
 
 export interface CustomerData {
   first_name: string;
