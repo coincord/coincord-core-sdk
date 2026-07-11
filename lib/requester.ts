@@ -1,6 +1,13 @@
 import { GraphQLClient } from "graphql-request";
 import FormData from "form-data";
 
+// Polyfill fetch for Node.js < 18
+if (typeof globalThis.fetch === "undefined") {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const nodeFetch = require("node-fetch");
+  globalThis.fetch = nodeFetch.default ?? nodeFetch;
+}
+
 const GQL_ENDPOINT = `https://${process.env.COINCORD_CORE_HOST_URL}/graphql`;
 const AUTH_HEADERS = {
   "Client-Id": process.env.COINCORD_CORE_HOST_CLIENT_ID as string,
