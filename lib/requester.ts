@@ -24,7 +24,7 @@ async function toBuffer(
   const arr = await (file as Blob).arrayBuffer();
   return {
     buf: Buffer.from(arr),
-    name: filename || (file instanceof File ? file.name : "file"),
+    name: filename || (typeof File !== "undefined" && file instanceof File ? (file as File).name : "file"),
   };
 }
 
