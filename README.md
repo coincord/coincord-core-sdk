@@ -477,7 +477,8 @@ const result = await coincordCoreClient.createBusinessCustomer({
   date_of_registration: "2015-03-20",   // ISO 8601
   description: "A fintech company",
   website: "https://acme.example.com",  // optional
-  rc_tin: "RC123456",
+  rc_number: "RC123456",
+  tin_number: "TIN987654",
   addressCountry: "NG",
   addressState: "Lagos",
   addressLine: "14 Marina Street",
@@ -541,7 +542,8 @@ console.log(result.created_at);
 | `date_of_registration` | `string` | ✓ | ISO 8601 date e.g. `"2015-03-20"` |
 | `description` | `string` | ✓ | Short business description |
 | `website` | `string` | — | Publicly accessible website URL |
-| `rc_tin` | `string` | ✓ | RC or TIN number |
+| `rc_number` | `string` | ✓ | CAC Registration Certificate number |
+| `tin_number` | `string` | ✓ | FIRS Tax Identification Number |
 | `addressCountry` | `string` | ✓ | Registered address country |
 | `addressState` | `string` | ✓ | Registered address state/region |
 | `addressLine` | `string` | ✓ | Street address line |
@@ -734,7 +736,8 @@ interface BusinessCustomerInput {
   date_of_registration: string;  // ISO 8601
   description: string;
   website?: string;
-  rc_tin: string;
+  rc_number: string;
+  tin_number: string;
   addressCountry: string;
   addressState: string;
   addressLine: string;
