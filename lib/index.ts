@@ -138,7 +138,8 @@ export interface BusinessCustomerInput {
   date_of_registration: string;
   description: string;
   website?: string;
-  rc_tin: string;
+  rc_number: string;
+  tin_number: string;
   addressCountry: string;
   addressState: string;
   addressLine: string;
